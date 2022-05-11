@@ -362,8 +362,8 @@ jobs:
           command: |
             export PATH=$HOME/go1.18/go/bin:$PATH
             make kcn
-            build/bin/kcn init --datadir cn/data genesis.json
             cp build/bin/kcn conf/
+            conf/kcn init --datadir cn/data genesis.json
             ./conf/kcnd start
             sleep 10
             tail -f cn/data/kcn/logs/kcnd.out
