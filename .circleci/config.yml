@@ -371,7 +371,7 @@ jobs:
             cd ..
             git clone https://$TEST_TOKEN@github.com/klaytn/klaytn-rpc-tester.git
             cd klaytn-rpc-tester
-            git checkout -t origin/release_teest
+            git checkout -t origin/release_test
             pip3 install -r requirements.txt
             cp config_template.json config.json
             echo "test"
