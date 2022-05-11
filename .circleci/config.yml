@@ -368,6 +368,7 @@ jobs:
             cp ../build/bin/kcn script/cn/bin/
             cd script
             ./set_CNonly.sh
+            cd ..
             pip3 install -r requirements.txt
             cp config_template.json config.json
             python3 main.py --protocol rpc
