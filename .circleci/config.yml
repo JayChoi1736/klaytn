@@ -368,7 +368,6 @@ jobs:
             cn/bin/kcn init --datadir cn/data genesis.json
             ./cn/bin/kcnd start
             sleep 10
-            tail -f cn/data/kcn/logs/kcnd.out
             cd ..
             git clone --depth 1 https://$TEST_TOKEN@github.com/klaytn/klaytn-rpc-tester.git
             python3 --version
