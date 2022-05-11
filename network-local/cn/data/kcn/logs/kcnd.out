@@ -1,34 +1,145 @@
-INFO[05/11,11:26:32 +09] [18] Setting connection type                   nodetype=cn conntype=0
-INFO[05/11,11:26:32 +09] [18] Setting MaxPhysicalConnections            MaxPhysicalConnections=100
-INFO[05/11,11:26:32 +09] [18] A private network ID is set               networkid=940625
-INFO[05/11,11:26:32 +09] [18] Raised fd limit to process's maximum value  fd=10240
-INFO[05/11,11:26:32 +09] [18] A private network ID is set               networkid=940625
-INFO[05/11,11:26:32 +09] [18] Archiving mode of this node               isArchiveMode=true
-INFO[05/11,11:26:32 +09] [40] Starting peer-to-peer node                instance=Klaytn/v1.8.3+6a8902f343/darwin-amd64/go1.18
-INFO[05/11,11:26:32 +09] [47] Non-single database is used for persistent storage  DBType=LevelDB
-INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/misc levelDBCacheSize=16 openFilesLimit=102 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
-INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/header levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
-INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/body   levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
-INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/receipts levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
-INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/0 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
-INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/1 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
-INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/2 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
-INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/3 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
-INFO[05/11,11:26:33 +09] [47] Created a sharded database                dbType=statetrie numShards=4
-INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/txlookup    levelDBCacheSize=16 openFilesLimit=102 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
-INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/bridgeservice levelDBCacheSize=16 openFilesLimit=51  useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
-INFO[05/11,11:26:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/snapshot      levelDBCacheSize=22 openFilesLimit=153 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
-INFO[05/11,11:26:34 +09] [30] No governance state found in a database  
-INFO[05/11,11:26:34 +09] [41] Initialised chain configuration           config="{ChainID: 940625 IstanbulCompatibleBlock: 0 LondonCompatibleBlock: 0 EthTxTypeCompatibleBlock: 0 SubGroupSize: 1 UnitPrice: 750000000000 DeriveShaImpl: 2 Engine: istanbul}"
-INFO[05/11,11:26:34 +09] [41] Initialising Klaytn protocol              versions=[64] network=940625
-WARN[05/11,11:26:34 +09] [5] Upgrade database version                  from=N/A to=3
-INFO[05/11,11:26:34 +09] [5] Using DeriveShaConcat!                   
-INFO[05/11,11:26:34 +09] [48] Initializing local trie node cache (fastCache)  MaxMiB=9830 FilePath=cn/data/fastcache
-INFO[05/11,11:26:34 +09] [48] Initialized local trie node cache (fastCache)  LoadedMiB=0 LoadedEntries=0 elapsed=4.489583ms
-INFO[05/11,11:26:34 +09] [5] Loaded most recent local header           number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
-INFO[05/11,11:26:34 +09] [5] Loaded most recent local full block       number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
-INFO[05/11,11:26:34 +09] [5] Loaded most recent local fast block       number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
-INFO[05/11,11:26:34 +09] [5] prefetchTxWorkers are started             num=32
-INFO[05/11,11:26:34 +09] [5] Regenerated local transaction journal     transactions=0 accounts=0
-INFO[05/11,11:26:34 +09] [40] Starting P2P networking                  
-Fatal: Error starting protocol stack: listen tcp :30303: bind: address already in use
+INFO[05/11,12:25:17 +09] [18] Setting connection type                   nodetype=cn conntype=0
+INFO[05/11,12:25:17 +09] [18] Setting MaxPhysicalConnections            MaxPhysicalConnections=100
+INFO[05/11,12:25:17 +09] [18] A private network ID is set               networkid=940625
+INFO[05/11,12:25:17 +09] [18] Raised fd limit to process's maximum value  fd=10240
+INFO[05/11,12:25:17 +09] [18] A private network ID is set               networkid=940625
+INFO[05/11,12:25:17 +09] [18] Archiving mode of this node               isArchiveMode=true
+INFO[05/11,12:25:17 +09] [40] Starting peer-to-peer node                instance=Klaytn/v1.8.3+6a8902f343/darwin-amd64/go1.18
+INFO[05/11,12:25:17 +09] [47] Non-single database is used for persistent storage  DBType=LevelDB
+INFO[05/11,12:25:17 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/misc levelDBCacheSize=16 openFilesLimit=102 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,12:25:17 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/header levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,12:25:17 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/body   levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,12:25:17 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/receipts levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,12:25:17 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/0 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,12:25:18 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/1 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,12:25:18 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/2 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,12:25:18 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/3 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,12:25:19 +09] [47] Created a sharded database                dbType=statetrie numShards=4
+INFO[05/11,12:25:19 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/txlookup    levelDBCacheSize=16 openFilesLimit=102 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,12:25:19 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/bridgeservice levelDBCacheSize=16 openFilesLimit=51  useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,12:25:19 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/snapshot      levelDBCacheSize=22 openFilesLimit=153 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,12:25:19 +09] [30] No governance state found in a database  
+INFO[05/11,12:25:19 +09] [41] Initialised chain configuration           config="{ChainID: 940625 IstanbulCompatibleBlock: 0 LondonCompatibleBlock: 0 EthTxTypeCompatibleBlock: 0 SubGroupSize: 1 UnitPrice: 750000000000 DeriveShaImpl: 2 Engine: istanbul}"
+INFO[05/11,12:25:19 +09] [41] Initialising Klaytn protocol              versions=[64] network=940625
+WARN[05/11,12:25:19 +09] [5] Upgrade database version                  from=N/A to=3
+INFO[05/11,12:25:19 +09] [5] Using DeriveShaConcat!                   
+INFO[05/11,12:25:19 +09] [48] Initializing local trie node cache (fastCache)  MaxMiB=9830 FilePath=cn/data/fastcache
+INFO[05/11,12:25:19 +09] [48] Initialized local trie node cache (fastCache)  LoadedMiB=0 LoadedEntries=0 elapsed=5.67075ms
+INFO[05/11,12:25:19 +09] [5] Loaded most recent local header           number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
+INFO[05/11,12:25:19 +09] [5] Loaded most recent local full block       number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
+INFO[05/11,12:25:19 +09] [5] Loaded most recent local fast block       number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
+INFO[05/11,12:25:19 +09] [5] prefetchTxWorkers are started             num=32
+INFO[05/11,12:25:19 +09] [5] Regenerated local transaction journal     transactions=0 accounts=0
+INFO[05/11,12:25:19 +09] [40] Starting P2P networking                  
+INFO[05/11,12:25:19 +09] [40] Started P2P server                        id=9419498985bfb636 multichannel=false
+INFO[05/11,12:25:19 +09] [44] Start listening chain head event to update stakingInfoCache. 
+INFO[05/11,12:25:19 +09] [40] RLPx listener up                          self="kni://9419498985bfb636a90b97b352bffac514771baa2a30a621a1569ce067ab9227c2f7f383d97e714469c4995a7e89fb15c53b7d65b87c9548b37cc3e434b1c79e@[::]:30303?discport=0"
+INFO[05/11,12:25:19 +09] [40] IPC endpoint opened                       url=/Users/krust/project/network-local/cn/data/klay.ipc
+INFO[05/11,12:25:19 +09] [40] FastHTTP endpoint opened                  url=http://0.0.0.0:8551                                 cors=* vhosts=*
+INFO[05/11,12:25:19 +09] [40] FastWebSocket endpoint opened             url=ws://0.0.0.0:8552
+WARN[05/11,12:25:19 +09] [18] Use explicit addresses! Referring to accounts by order in the keystore folder is dangerous and will be deprecated! 
+INFO[05/11,12:25:19 +09] [50] Starting mining operation                
+INFO[05/11,12:25:19 +09] [44] The addressBook is not yet activated. Use empty stakingInfo  reason="incomplete node information from AddressBook"
+INFO[05/11,12:25:19 +09] [44] Add a new stakingInfo to stakingInfoCache and stakingInfoDB  blockNum=0
+INFO[05/11,12:25:19 +09] [50] Commit new mining work                    number=1 hash=3f9add…639026 txs=0 elapsed=6.416ms   commitTime=194.25µs finalizeTime=6.208ms
+INFO[05/11,12:25:19 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:19 +09] [24] Committed                                 number=1 hash=892237…9387f4 address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:19 +09] [50] Successfully sealed new block             number=1 hash=892237…9387f4
+INFO[05/11,12:25:19 +09] [50] Successfully wrote mined block            num=1  hash=892237…9387f4 txs=0 elapsed=5.584333ms
+INFO[05/11,12:25:19 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:20 +09] [19] Unlocked account                          address=0x4B2c736fd05C2e2da3CcBD001a395a444F16A861
+INFO[05/11,12:25:20 +09] [50] Commit new mining work                    number=2 hash=8dbcd1…323340 txs=0 elapsed=2.646ms    commitTime=1.206ms  finalizeTime=1.405ms
+INFO[05/11,12:25:20 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:20 +09] [24] Committed                                 number=2 hash=a2ed4e…8b494e address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:20 +09] [50] Successfully sealed new block             number=2 hash=a2ed4e…8b494e
+INFO[05/11,12:25:20 +09] [50] Successfully wrote mined block            num=2  hash=a2ed4e…8b494e txs=0 elapsed=2.349166ms
+INFO[05/11,12:25:20 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:21 +09] [50] Commit new mining work                    number=3 hash=450f6c…bb4aa5 txs=0 elapsed=2.137ms    commitTime=1.121ms  finalizeTime=978.625µs
+INFO[05/11,12:25:21 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:21 +09] [24] Committed                                 number=3 hash=fe682f…c8b6bf address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:21 +09] [50] Successfully sealed new block             number=3 hash=fe682f…c8b6bf
+INFO[05/11,12:25:21 +09] [50] Successfully wrote mined block            num=3  hash=fe682f…c8b6bf txs=0 elapsed=1.949708ms
+INFO[05/11,12:25:21 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:22 +09] [50] Commit new mining work                    number=4 hash=cc8bbe…ed6614 txs=0 elapsed=1.148ms    commitTime=373.208µs finalizeTime=742.167µs
+INFO[05/11,12:25:22 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:22 +09] [24] Committed                                 number=4 hash=d8ca37…1c96e8 address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:22 +09] [50] Successfully sealed new block             number=4 hash=d8ca37…1c96e8
+INFO[05/11,12:25:22 +09] [50] Successfully wrote mined block            num=4  hash=d8ca37…1c96e8 txs=0 elapsed=1.851291ms
+INFO[05/11,12:25:22 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:22 +09] [35] Mapped network port                       protobuf=tcp extport=30303 intport=30303 interface="UPNP IGDv1-IP1"
+INFO[05/11,12:25:23 +09] [50] Commit new mining work                    number=5 hash=c07967…1e22d0 txs=0 elapsed=1.287ms    commitTime=395.291µs finalizeTime=857.084µs
+INFO[05/11,12:25:23 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:23 +09] [24] Committed                                 number=5 hash=afe53f…9dbf48 address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:23 +09] [50] Successfully sealed new block             number=5 hash=afe53f…9dbf48
+INFO[05/11,12:25:23 +09] [50] Successfully wrote mined block            num=5  hash=afe53f…9dbf48 txs=0 elapsed=1.999459ms
+INFO[05/11,12:25:23 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:24 +09] [50] Commit new mining work                    number=6 hash=5ee5a1…425fdc txs=0 elapsed=846.375µs  commitTime=216.666µs finalizeTime=597.792µs
+INFO[05/11,12:25:24 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:24 +09] [24] Committed                                 number=6 hash=f7513d…6514ee address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:24 +09] [50] Successfully sealed new block             number=6 hash=f7513d…6514ee
+INFO[05/11,12:25:24 +09] [50] Successfully wrote mined block            num=6  hash=f7513d…6514ee txs=0 elapsed=1.664083ms
+INFO[05/11,12:25:24 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:25 +09] [50] Commit new mining work                    number=7 hash=8c7399…a5f38f txs=0 elapsed=1.298ms    commitTime=400.125µs finalizeTime=860.917µs
+INFO[05/11,12:25:25 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:25 +09] [24] Committed                                 number=7 hash=dfa530…0fcc14 address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:25 +09] [50] Successfully sealed new block             number=7 hash=dfa530…0fcc14
+INFO[05/11,12:25:25 +09] [50] Successfully wrote mined block            num=7  hash=dfa530…0fcc14 txs=0 elapsed=3.177458ms
+INFO[05/11,12:25:25 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:26 +09] [50] Commit new mining work                    number=8 hash=b1bfc3…f11ff5 txs=0 elapsed=1.471ms    commitTime=464.208µs finalizeTime=968.25µs
+INFO[05/11,12:25:26 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:26 +09] [24] Committed                                 number=8 hash=079a1c…966079 address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:26 +09] [50] Successfully sealed new block             number=8 hash=079a1c…966079
+INFO[05/11,12:25:26 +09] [50] Successfully wrote mined block            num=8  hash=079a1c…966079 txs=0 elapsed=1.854083ms
+INFO[05/11,12:25:26 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:27 +09] [50] Commit new mining work                    number=9 hash=f928ac…7d7036 txs=0 elapsed=1.506ms    commitTime=706.292µs finalizeTime=772.542µs
+INFO[05/11,12:25:27 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:27 +09] [24] Committed                                 number=9 hash=3f954b…524823 address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:27 +09] [50] Successfully sealed new block             number=9 hash=3f954b…524823
+INFO[05/11,12:25:27 +09] [50] Successfully wrote mined block            num=9  hash=3f954b…524823 txs=0 elapsed=1.023416ms
+INFO[05/11,12:25:27 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:28 +09] [50] Commit new mining work                    number=10 hash=0a9373…769573 txs=0 elapsed=1.429ms    commitTime=387.625µs finalizeTime=1.003ms
+INFO[05/11,12:25:28 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:28 +09] [24] Committed                                 number=10 hash=73109a…268322 address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:28 +09] [50] Successfully sealed new block             number=10 hash=73109a…268322
+INFO[05/11,12:25:28 +09] [50] Successfully wrote mined block            num=10 hash=73109a…268322 txs=0 elapsed=2.490708ms
+INFO[05/11,12:25:28 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:29 +09] [50] Commit new mining work                    number=11 hash=d82e88…ab68eb txs=0 elapsed=1.791ms    commitTime=408.833µs finalizeTime=1.344ms
+INFO[05/11,12:25:29 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:29 +09] [24] Committed                                 number=11 hash=70e748…2f9df2 address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:29 +09] [50] Successfully sealed new block             number=11 hash=70e748…2f9df2
+INFO[05/11,12:25:29 +09] [50] Successfully wrote mined block            num=11 hash=70e748…2f9df2 txs=0 elapsed=1.887208ms
+INFO[05/11,12:25:29 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:30 +09] [50] Commit new mining work                    number=12 hash=988804…16dd08 txs=0 elapsed=2.409ms    commitTime=586.292µs finalizeTime=1.779ms
+INFO[05/11,12:25:30 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:30 +09] [24] Committed                                 number=12 hash=5ded89…98d190 address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:30 +09] [50] Successfully sealed new block             number=12 hash=5ded89…98d190
+INFO[05/11,12:25:30 +09] [50] Successfully wrote mined block            num=12 hash=5ded89…98d190 txs=0 elapsed=1.832917ms
+INFO[05/11,12:25:30 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:31 +09] [50] Commit new mining work                    number=13 hash=a54ee5…070d92 txs=0 elapsed=1.307ms    commitTime=420.041µs finalizeTime=848.625µs
+INFO[05/11,12:25:31 +09] [25] received more than 2f agreements and change state to prepared  msgType=1 prepareMsgNum=1 commitMsgNum=0
+INFO[05/11,12:25:31 +09] [24] Committed                                 number=13 hash=042f17…dd8b84 address=0x9712f943b296758aaae79944ec975884188d3a96
+INFO[05/11,12:25:31 +09] [50] Successfully sealed new block             number=13 hash=042f17…dd8b84
+INFO[05/11,12:25:31 +09] [50] Successfully wrote mined block            num=13 hash=042f17…dd8b84 txs=0 elapsed=1.837042ms
+INFO[05/11,12:25:31 +09] [50] Mining too far in the future              wait=1s
+INFO[05/11,12:25:32 +09] [18] Got interrupt, shutting down...          
+INFO[05/11,12:25:32 +09] [40] WebSocket endpoint closed                 url=ws://0.0.0.0:8552
+INFO[05/11,12:25:32 +09] [40] HTTP endpoint closed                      url=http://0.0.0.0:8551
+INFO[05/11,12:25:32 +09] [40] IPC endpoint closed                       endpoint=/Users/krust/project/network-local/cn/data/klay.ipc
+INFO[05/11,12:25:32 +09] [41] Stopping Klaytn protocol                 
+INFO[05/11,12:25:32 +09] [41] Klaytn protocol stopped                  
+INFO[05/11,12:25:32 +09] [29] Terminated insertWorker                  
+INFO[05/11,12:25:32 +09] [5] Transaction pool stopped                 
+INFO[05/11,12:25:32 +09] [50] Commit new mining work                    number=14 hash=74b4ea…47e07e txs=0 elapsed=1.112ms    commitTime=332.875µs finalizeTime=748.375µs
+ERROR[05/11,12:25:32 +09] [25] Drop an empty message from timeout channel 
+INFO[05/11,12:25:32 +09] [5] Blockchain manager stopped               
+INFO[05/11,12:25:32 +09] [47] Database closed                           path=/Users/krust/project/network-local/cn/data/klay/chaindata/misc
+INFO[05/11,12:25:32 +09] [47] Database closed                           path=/Users/krust/project/network-local/cn/data/klay/chaindata/header
+INFO[05/11,12:25:32 +09] [47] Database closed                           path=/Users/krust/project/network-local/cn/data/klay/chaindata/body
+INFO[05/11,12:25:32 +09] [47] Database closed                           path=/Users/krust/project/network-local/cn/data/klay/chaindata/receipts
+INFO[05/11,12:25:32 +09] [47] Database closed                           path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/0
+INFO[05/11,12:25:32 +09] [47] Database closed                           path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/1
+INFO[05/11,12:25:32 +09] [47] Database closed                           path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/2
+INFO[05/11,12:25:32 +09] [47] Database closed                           path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/3
+INFO[05/11,12:25:32 +09] [47] Database closed                           path=/Users/krust/project/network-local/cn/data/klay/chaindata/txlookup
+INFO[05/11,12:25:32 +09] [47] Database closed                           path=/Users/krust/project/network-local/cn/data/klay/chaindata/bridgeservice
+INFO[05/11,12:25:32 +09] [47] Database closed                           path=/Users/krust/project/network-local/cn/data/klay/chaindata/snapshot
