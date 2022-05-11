@@ -1,0 +1,126 @@
+INFO[05/11,10:00:32 +09] [18] Setting connection type                   nodetype=en conntype=1
+INFO[05/11,10:00:32 +09] [18] Setting MaxPhysicalConnections            MaxPhysicalConnections=10
+INFO[05/11,10:00:32 +09] [18] A private network ID is set               networkid=940625
+INFO[05/11,10:00:32 +09] [18] Raised fd limit to process's maximum value  fd=10240
+INFO[05/11,10:00:32 +09] [18] A private network ID is set               networkid=940625
+INFO[05/11,10:00:32 +09] [18] Archiving mode of this node               isArchiveMode=true
+INFO[05/11,10:00:32 +09] [40] Starting peer-to-peer node                instance=Klaytn/v1.8.3+6a8902f343/darwin-amd64/go1.18
+INFO[05/11,10:00:32 +09] [47] Non-single database is used for persistent storage  DBType=LevelDB
+INFO[05/11,10:00:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/misc levelDBCacheSize=16 openFilesLimit=102 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/header levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/body   levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/receipts levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/statetrie/0 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/statetrie/1 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/statetrie/2 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/statetrie/3 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:34 +09] [47] Created a sharded database                dbType=statetrie numShards=4
+INFO[05/11,10:00:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/txlookup    levelDBCacheSize=16 openFilesLimit=102 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/bridgeservice levelDBCacheSize=16 openFilesLimit=51  useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/snapshot      levelDBCacheSize=22 openFilesLimit=153 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:34 +09] [30] No governance state found in a database  
+INFO[05/11,10:00:34 +09] [41] Initialised chain configuration           config="{ChainID: 940625 IstanbulCompatibleBlock: 0 LondonCompatibleBlock: 0 EthTxTypeCompatibleBlock: 0 SubGroupSize: 1 UnitPrice: 750000000000 DeriveShaImpl: 2 Engine: istanbul}"
+INFO[05/11,10:00:34 +09] [41] Initialising Klaytn protocol              versions=[64] network=940625
+WARN[05/11,10:00:34 +09] [5] Upgrade database version                  from=N/A to=3
+INFO[05/11,10:00:34 +09] [5] Using DeriveShaConcat!                   
+INFO[05/11,10:00:34 +09] [48] Initializing local trie node cache (fastCache)  MaxMiB=9830 FilePath=/Users/krust/project/network-local/en/data/fastcache
+INFO[05/11,10:00:34 +09] [48] Initialized local trie node cache (fastCache)  LoadedMiB=0 LoadedEntries=0 elapsed=4.965416ms
+INFO[05/11,10:00:34 +09] [5] Loaded most recent local header           number=0 hash=d71564…d3e868 td=1 age=1y3mo6d
+INFO[05/11,10:00:34 +09] [5] Loaded most recent local full block       number=0 hash=d71564…d3e868 td=1 age=1y3mo6d
+INFO[05/11,10:00:34 +09] [5] Loaded most recent local fast block       number=0 hash=d71564…d3e868 td=1 age=1y3mo6d
+INFO[05/11,10:00:34 +09] [5] prefetchTxWorkers are started             num=32
+INFO[05/11,10:00:34 +09] [5] Regenerated local transaction journal     transactions=0 accounts=0
+INFO[05/11,10:00:34 +09] [47] Non-single database is used for persistent storage  DBType=LevelDB
+INFO[05/11,10:00:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/misc        levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/header      levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/body        levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/receipts    levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/statetrie   levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/txlookup    levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:35 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/bridgeservice levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:35 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/snapshot      levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,10:00:35 +09] [45] Initialising Klaytn-Bridge protocol       network=1
+ERROR[05/11,10:00:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,10:00:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,10:00:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,10:00:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,10:00:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,10:00:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,10:00:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,10:00:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,10:00:35 +09] [45] p2p rpc registered                        namespace=klay
+INFO[05/11,10:00:35 +09] [40] Starting P2P networking                  
+INFO[05/11,10:00:35 +09] [40] Started P2P server                        id=ae50a40728759413 multichannel=false
+INFO[05/11,10:00:35 +09] [40] RLPx listener up                          self="kni://ae50a407287594135df1f57eb6ddb95495ee246866239c231a520cc7e1fabd4ba6e270bf7d152bc8327f4aa4010fd2b0a174db7bf994815ce09e7d9cc00e40a5@[::]:30305?discport=0"
+INFO[05/11,10:00:35 +09] [44] Start listening chain head event to update stakingInfoCache. 
+INFO[05/11,10:00:35 +09] [45] Starting P2P networking                  
+INFO[05/11,10:00:35 +09] [33] [Dial] Add dial candidate from static nodes  id=3ad722bebea0a8dd NodeType=2 ip=::1 mainPort=30304 port=[30304]
+INFO[05/11,10:00:35 +09] [45] Started P2P server                        id=ae50a40728759413 multichannel=false
+INFO[05/11,10:00:35 +09] [45] RLPx listener up                          self="kni://ae50a407287594135df1f57eb6ddb95495ee246866239c231a520cc7e1fabd4ba6e270bf7d152bc8327f4aa4010fd2b0a174db7bf994815ce09e7d9cc00e40a5@[::]:50505?discport=0"
+INFO[05/11,10:00:35 +09] [40] IPC endpoint opened                       url=/Users/krust/project/network-local/en/data/klay.ipc
+INFO[05/11,10:00:35 +09] [40] FastHTTP endpoint opened                  url=http://0.0.0.0:8553                                 cors=* vhosts=*
+INFO[05/11,10:00:35 +09] [40] FastWebSocket endpoint opened             url=ws://0.0.0.0:8554
+Fatal: Failed to read password file: open /Users/krust/project/klaytn-network-local/en/conf/pwd.txt: no such file or directory
+INFO[05/11,11:26:32 +09] [18] Setting connection type                   nodetype=en conntype=1
+INFO[05/11,11:26:32 +09] [18] Setting MaxPhysicalConnections            MaxPhysicalConnections=10
+INFO[05/11,11:26:32 +09] [18] A private network ID is set               networkid=940625
+INFO[05/11,11:26:32 +09] [18] Raised fd limit to process's maximum value  fd=10240
+INFO[05/11,11:26:32 +09] [18] A private network ID is set               networkid=940625
+INFO[05/11,11:26:32 +09] [18] Archiving mode of this node               isArchiveMode=true
+INFO[05/11,11:26:32 +09] [40] Starting peer-to-peer node                instance=Klaytn/v1.8.3+6a8902f343/darwin-amd64/go1.18
+INFO[05/11,11:26:32 +09] [47] Non-single database is used for persistent storage  DBType=LevelDB
+INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/misc levelDBCacheSize=16 openFilesLimit=102 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/header levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/body   levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/receipts levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/statetrie/0 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/statetrie/1 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/statetrie/2 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/statetrie/3 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:33 +09] [47] Created a sharded database                dbType=statetrie numShards=4
+INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/txlookup    levelDBCacheSize=16 openFilesLimit=102 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/bridgeservice levelDBCacheSize=16 openFilesLimit=51  useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/chaindata/snapshot      levelDBCacheSize=22 openFilesLimit=153 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:34 +09] [30] No governance state found in a database  
+INFO[05/11,11:26:34 +09] [41] Initialised chain configuration           config="{ChainID: 940625 IstanbulCompatibleBlock: 0 LondonCompatibleBlock: 0 EthTxTypeCompatibleBlock: 0 SubGroupSize: 1 UnitPrice: 750000000000 DeriveShaImpl: 2 Engine: istanbul}"
+INFO[05/11,11:26:34 +09] [41] Initialising Klaytn protocol              versions=[64] network=940625
+INFO[05/11,11:26:34 +09] [5] Using DeriveShaConcat!                   
+INFO[05/11,11:26:34 +09] [48] Initializing local trie node cache (fastCache)  MaxMiB=9830 FilePath=/Users/krust/project/network-local/en/data/fastcache
+INFO[05/11,11:26:34 +09] [48] Initialized local trie node cache (fastCache)  LoadedMiB=0 LoadedEntries=0 elapsed=2.293333ms
+INFO[05/11,11:26:34 +09] [5] Loaded most recent local header           number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
+INFO[05/11,11:26:34 +09] [5] Loaded most recent local full block       number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
+INFO[05/11,11:26:34 +09] [5] Loaded most recent local fast block       number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
+INFO[05/11,11:26:34 +09] [5] prefetchTxWorkers are started             num=32
+INFO[05/11,11:26:34 +09] [5] Loaded local transaction journal          transactions=0 dropped=0
+INFO[05/11,11:26:34 +09] [5] Regenerated local transaction journal     transactions=0 accounts=0
+INFO[05/11,11:26:34 +09] [47] Non-single database is used for persistent storage  DBType=LevelDB
+INFO[05/11,11:26:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/misc        levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/header      levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/body        levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/receipts    levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/statetrie   levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:35 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/txlookup    levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:35 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/bridgeservice levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:35 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/en/data/klay/scchaindata/snapshot      levelDBCacheSize=16 openFilesLimit=16  useBufferPool=false usePerfCheck=false compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:35 +09] [45] Initialising Klaytn-Bridge protocol       network=1
+ERROR[05/11,11:26:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,11:26:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,11:26:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,11:26:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,11:26:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,11:26:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,11:26:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,11:26:35 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[05/11,11:26:35 +09] [45] p2p rpc registered                        namespace=klay
+INFO[05/11,11:26:35 +09] [40] Starting P2P networking                  
+INFO[05/11,11:26:35 +09] [40] Started P2P server                        id=ae50a40728759413 multichannel=false
+INFO[05/11,11:26:35 +09] [45] Starting P2P networking                  
+INFO[05/11,11:26:35 +09] [45] Started P2P server                        id=ae50a40728759413 multichannel=false
+INFO[05/11,11:26:35 +09] [45] RLPx listener up                          self="kni://ae50a407287594135df1f57eb6ddb95495ee246866239c231a520cc7e1fabd4ba6e270bf7d152bc8327f4aa4010fd2b0a174db7bf994815ce09e7d9cc00e40a5@[::]:50505?discport=0"
+INFO[05/11,11:26:35 +09] [33] [Dial] Add dial candidate from static nodes  id=3ad722bebea0a8dd NodeType=2 ip=::1 mainPort=30304 port=[30304]
+INFO[05/11,11:26:35 +09] [44] Start listening chain head event to update stakingInfoCache. 
+INFO[05/11,11:26:35 +09] [40] RLPx listener up                          self="kni://ae50a407287594135df1f57eb6ddb95495ee246866239c231a520cc7e1fabd4ba6e270bf7d152bc8327f4aa4010fd2b0a174db7bf994815ce09e7d9cc00e40a5@[::]:30305?discport=0"
+INFO[05/11,11:26:35 +09] [40] IPC endpoint opened                       url=/Users/krust/project/network-local/en/data/klay.ipc
+INFO[05/11,11:26:35 +09] [40] FastHTTP endpoint opened                  url=http://0.0.0.0:8553                                 cors=* vhosts=*
+INFO[05/11,11:26:35 +09] [40] FastWebSocket endpoint opened             url=ws://0.0.0.0:8554
+Fatal: Failed to read password file: open /Users/krust/project/klaytn-network-local/en/conf/pwd.txt: no such file or directory

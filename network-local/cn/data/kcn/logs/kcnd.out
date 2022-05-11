@@ -1,0 +1,34 @@
+INFO[05/11,11:26:32 +09] [18] Setting connection type                   nodetype=cn conntype=0
+INFO[05/11,11:26:32 +09] [18] Setting MaxPhysicalConnections            MaxPhysicalConnections=100
+INFO[05/11,11:26:32 +09] [18] A private network ID is set               networkid=940625
+INFO[05/11,11:26:32 +09] [18] Raised fd limit to process's maximum value  fd=10240
+INFO[05/11,11:26:32 +09] [18] A private network ID is set               networkid=940625
+INFO[05/11,11:26:32 +09] [18] Archiving mode of this node               isArchiveMode=true
+INFO[05/11,11:26:32 +09] [40] Starting peer-to-peer node                instance=Klaytn/v1.8.3+6a8902f343/darwin-amd64/go1.18
+INFO[05/11,11:26:32 +09] [47] Non-single database is used for persistent storage  DBType=LevelDB
+INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/misc levelDBCacheSize=16 openFilesLimit=102 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/header levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/body   levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/receipts levelDBCacheSize=38 openFilesLimit=256 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:32 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/0 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/1 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/2 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/statetrie/3 levelDBCacheSize=76 openFilesLimit=512 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:33 +09] [47] Created a sharded database                dbType=statetrie numShards=4
+INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/txlookup    levelDBCacheSize=16 openFilesLimit=102 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:33 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/bridgeservice levelDBCacheSize=16 openFilesLimit=51  useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:34 +09] [47] LevelDB configurations                    path=/Users/krust/project/network-local/cn/data/klay/chaindata/snapshot      levelDBCacheSize=22 openFilesLimit=153 useBufferPool=true usePerfCheck=true compressionType=none compactionTableSize(MB)=2 compactionTableSizeMultiplier=1.000
+INFO[05/11,11:26:34 +09] [30] No governance state found in a database  
+INFO[05/11,11:26:34 +09] [41] Initialised chain configuration           config="{ChainID: 940625 IstanbulCompatibleBlock: 0 LondonCompatibleBlock: 0 EthTxTypeCompatibleBlock: 0 SubGroupSize: 1 UnitPrice: 750000000000 DeriveShaImpl: 2 Engine: istanbul}"
+INFO[05/11,11:26:34 +09] [41] Initialising Klaytn protocol              versions=[64] network=940625
+WARN[05/11,11:26:34 +09] [5] Upgrade database version                  from=N/A to=3
+INFO[05/11,11:26:34 +09] [5] Using DeriveShaConcat!                   
+INFO[05/11,11:26:34 +09] [48] Initializing local trie node cache (fastCache)  MaxMiB=9830 FilePath=cn/data/fastcache
+INFO[05/11,11:26:34 +09] [48] Initialized local trie node cache (fastCache)  LoadedMiB=0 LoadedEntries=0 elapsed=4.489583ms
+INFO[05/11,11:26:34 +09] [5] Loaded most recent local header           number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
+INFO[05/11,11:26:34 +09] [5] Loaded most recent local full block       number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
+INFO[05/11,11:26:34 +09] [5] Loaded most recent local fast block       number=0 hash=d71564…d3e868 td=1 age=1y3mo1w
+INFO[05/11,11:26:34 +09] [5] prefetchTxWorkers are started             num=32
+INFO[05/11,11:26:34 +09] [5] Regenerated local transaction journal     transactions=0 accounts=0
+INFO[05/11,11:26:34 +09] [40] Starting P2P networking                  
+Fatal: Error starting protocol stack: listen tcp :30303: bind: address already in use

@@ -1,0 +1,12 @@
+ERROR[04/16,13:54:50 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[04/16,13:54:50 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[04/16,13:54:50 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[04/16,13:54:50 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[04/16,13:54:50 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[04/16,13:54:50 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[04/16,13:54:50 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[04/16,13:54:50 +09] [45] p2p rpc registered                        namespace=klay
+ERROR[04/16,13:54:50 +09] [45] p2p rpc registered                        namespace=klay
+INFO[04/16,13:54:50 +09] [40] Starting P2P networking                  
+INFO[04/16,13:54:50 +09] [40] Started P2P server                        id=ae50a40728759413 multichannel=false
+INFO[04/16,13:54:50 +09] [40] RLPx listener up                          self="kni://ae50a407287594135df1f57eb6ddb95495ee246866239c231a520cc7e1fabd4ba6e270bf7d152bc8327f4aa4010fd2b0a174db7bf994815ce09e7d9cc00e40a5@[::]:30305?discport=0"
