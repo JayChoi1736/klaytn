@@ -362,11 +362,14 @@ jobs:
           command: |
             export PATH=$HOME/go1.18/go/bin:$PATH
             make kcn
-            cp build/bin/kcn conf/
-            conf/kcn init --datadir cn/data genesis.json
-            ./conf/kcnd start
+            cp build/bin/kcn network-local/cn/bin/
+            rm -rf network-local/cn/data/klay/chaindata/ network-local/cn/data/klay/LOCK network-local/cn/data/klay/transactions.rlp 
+            cd network-local
+            cn/bin/kcn init --datadir cn/data genesis.json
+            ./cn/bin/kcnd start
             sleep 10
             tail -f cn/data/kcn/logs/kcnd.out
+            cd ..
             git clone --depth 1 https://$TEST_TOKEN@github.com/klaytn/klaytn-rpc-tester.git
             python3 --version
             cd klaytn-rpc-tester
