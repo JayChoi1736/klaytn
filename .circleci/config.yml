@@ -360,7 +360,7 @@ jobs:
           name: "Run test rpcs"
           no_output_timeout: 30m
           command: |
-            make kcn
+            make kcn 
             git clone https://$TEST_TOKEN@github.com/klaytn/klaytn-rpc-tester.git
             cd klaytn-rpc-tester
             git checkout -t origin/release_test
