@@ -363,7 +363,6 @@ jobs:
             make kcn 
             git clone https://$TEST_TOKEN@github.com/klaytn/klaytn-rpc-tester.git
             cd klaytn-rpc-tester
-            git checkout -t origin/release_test
             cp ../build/bin/kcn script/cn/bin/
             cd script
             ./set_CNonly.sh
