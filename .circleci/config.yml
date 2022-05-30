@@ -540,5 +540,17 @@ workflows:
 
       - test-rpc:
           filters: *filter-version-not-release
+  
+  nightly-linters:
+    triggers:
+      - schedule:
+          cron: "0 40 * * *"
+          filters:
+            branches:
+              only: circleci-rpc-tester
+    jobs:
+      - test-rpc
+
+  
 
 
