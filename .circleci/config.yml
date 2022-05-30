@@ -549,5 +549,5 @@ workflows:
             branches:
               only: circleci-rpc-tester
     jobs:
-      - linters
+      - test-rpc
 
