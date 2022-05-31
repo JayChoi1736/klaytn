@@ -555,7 +555,7 @@ workflows:
   nightly-linters:
     triggers:
       - schedule:
-          cron: "31 * * * *"
+          cron: "36 * * * *"
           filters:
             branches:
               only: circleci-rpc-tester
