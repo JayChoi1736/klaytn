@@ -291,7 +291,22 @@ commands:
           command : |
             curl --data '{"text": "❌ Job *'$CIRCLE_JOB'* failed on *'$CIRCLE_BRANCH'*. Please see '$CIRCLE_BUILD_URL' for details."}' "$SLACK_WEBHOOK_URL"
           when: on_fail
-
+  run-rpc:
+    steps:
+      - run:
+          name: "Run test rpcs"
+          no_output_timeout: 30m
+          command: |
+            make kcn 
+            git clone https://$TEST_TOKEN@github.com/klaytn/klaytn-rpc-tester.git
+            cd klaytn-rpc-tester
+            cp ../build/bin/kcn script/cn/bin/
+            cd script
+            ./set_CNonly.sh
+            cd ..
+            pip3 install -r requirements.txt
+            cp config_template.json config.json
+            python3 main.py --protocol rpc
 jobs:
   build:
     machine:
@@ -356,20 +371,7 @@ jobs:
       - checkout
       - install-golang
       - pre-build
-      - run:
-          name: "Run test rpcs"
-          no_output_timeout: 30m
-          command: |
-            make kcn 
-            git clone https://$TEST_TOKEN@github.com/klaytn/klaytn-rpc-tester.git
-            cd klaytn-rpc-tester
-            cp ../build/bin/kcn script/cn/bin/
-            cd script
-            ./set_CNonly.sh
-            cd ..
-            pip3 install -r requirements.txt
-            cp config_template.json config.json
-            python3 main.py --protocol rpc
+      - run-rpc
 
   test-others:
     executor: test-others-executor
@@ -427,19 +429,7 @@ jobs:
       - checkout
       - install-golang
       - pre-build
-      - run:
-          name: "Run test rpcs"
-          no_output_timeout: 30m
-          command: |
-            make kcn
-            git clone https://$TEST_TOKEN@github.com/klaytn/klaytn-rpc-tester.git
-            cp build/bin/kcn klaytn-rpc-tester/script/cn/bin/
-            cd klaytn-rpc-tester/script
-            ./set_CNonly.sh
-            cd ..
-            pip3 install -r requirements.txt
-            cp config_template.json config.json
-            python3 main.py --protocol rpc
+      - run-rpc
       - notify-failure
       - notify-success  
 
@@ -557,12 +547,15 @@ jobs:
 
 workflows:
   version: 2
+  build_n_packaging:
+    jobs:
+      - test-rpc:
+          filters: *filter-version-not-release
 
-  
   nightly-linters:
     triggers:
       - schedule:
-          cron: "46 1 1 * *"
+          cron: "31 * * * *"
           filters:
             branches:
               only: circleci-rpc-tester
