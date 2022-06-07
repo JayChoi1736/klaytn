@@ -22,7 +22,7 @@ var (
 	bucketEntriesGauge      = metrics.NewRegisteredGauge("discover/bucketEntries", nil)      // the closest nodes list gauge
 	bucketReplacementsGauge = metrics.NewRegisteredGauge("discover/bucketReplacements", nil) // the replacement nodes list gauge (the nodes are found, but the entries are full)
 	udpPacketCounter        = metrics.NewRegisteredCounter("discover/udpPacket", nil)        // the received udp packet counter
-	pingMeter               = metrics.NewRegisteredMeter("discover/ping", nil)               // sending ping packet meter
+	pingMeter               = metrics.NewRegisteredMeter("discover/Ping", nil)               // sending ping packet meter
 	pendingPongCounter      = metrics.NewRegisteredCounter("discover/pendingPong", nil)      // pending pong packet counter at the moment
 	pongMeter               = metrics.NewRegisteredMeter("discover/pong", nil)               // received pong packet meter
 	findNodesMeter          = metrics.NewRegisteredMeter("discover/findnodes", nil)          // sending findnode packet meter
