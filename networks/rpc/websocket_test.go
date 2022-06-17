@@ -22,11 +22,16 @@ package rpc
 
 import (
 	"context"
+	"encoding/base64"
 	"net"
+	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	gorillaws "github.com/gorilla/websocket"
 
 	"github.com/klaytn/klaytn/common"
 	"github.com/stretchr/testify/assert"
@@ -42,13 +47,58 @@ type echoResult struct {
 	Args   *echoArgs
 }
 
+func TestWebsocketLargeCallFastws(t *testing.T) {
+	t.Parallel()
+
+	// create server
+	var (
+		srv    = newTestServer("service", new(Service))
+		ln     = newTestListener()
+		wsAddr = "ws://" + ln.Addr().String()
+	)
+	defer srv.Stop()
+	defer ln.Close()
+
+	go NewFastWSServer([]string{"*"}, srv).Serve(ln)
+	time.Sleep(100 * time.Millisecond)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	client, err := DialWebsocket(ctx, wsAddr, "")
+	//fmt.Println("dial web socket ", client, err)
+	if err != nil {
+		t.Fatalf("can't dial: %v", err)
+	}
+	defer client.Close()
+
+	// set configurations before testing
+	var result echoResult
+	method := "service_echo"
+
+	// set message size
+	messageSize := 200
+
+	messageSize, err = client.getMessageSize(method)
+	assert.NoError(t, err)
+	requestMaxLen := common.MaxRequestContentLength - messageSize
+	// This call sends slightly less than the limit and should work.
+	arg := strings.Repeat("x", requestMaxLen-1)
+
+	assert.NoError(t, client.Call(&result, method, arg, 1), "valid call didn't work")
+	assert.Equal(t, arg, result.String, "wrong string echoed")
+
+	// This call sends slightly larger than the allowed size and shouldn't work.
+	arg = strings.Repeat("x", requestMaxLen)
+	assert.Error(t, client.Call(&result, method, arg), "no error for too large call")
+}
+
 func TestWebsocketLargeCall(t *testing.T) {
 	t.Parallel()
 
 	// create server
 	var (
 		srv     = newTestServer("service", new(Service))
-		httpsrv = httptest.NewServer(srv.WebsocketHandler([]string{"*"}))
+		httpsrv = httptest.NewServer(srv.GSWebsocketHandler([]string{"*"}))
 		wsAddr  = "ws:" + strings.TrimPrefix(httpsrv.URL, "http:")
 	)
 	defer srv.Stop()
@@ -100,7 +150,7 @@ func TestWSServer_MaxConnections(t *testing.T) {
 	defer srv.Stop()
 	defer ln.Close()
 
-	go NewWSServer([]string{"*"}, srv).Serve(ln)
+	go NewGSWSServer([]string{"*"}, srv).Serve(ln)
 	time.Sleep(100 * time.Millisecond)
 
 	// set max websocket connections
@@ -127,6 +177,14 @@ func TestFastWSServer_MaxConnections(t *testing.T) {
 
 func testWebsocketMaxConnections(t *testing.T, addr string, maxConnections int) {
 	var closers []*Client
+	var expectedGSwsError = gorillaws.CloseError{
+		Code: gorillaws.CloseGoingAway,
+		Text: "unexpected EOF",
+	}
+	var expectedFastwsError = gorillaws.CloseError{
+		Code: gorillaws.CloseAbnormalClosure,
+		Text: "unexpected EOF",
+	}
 
 	for i := 0; i <= maxConnections; i++ {
 		client, err := DialWebsocket(context.Background(), addr, "")
@@ -144,11 +202,99 @@ func testWebsocketMaxConnections(t *testing.T, addr string, maxConnections int) 
 			assert.Equal(t, arg, result.String, "wrong string echoed")
 		} else {
 			assert.Error(t, err)
-			assert.Equal(t, "EOF", err.Error())
+			//assert.Equal(t, "EOF", err.Error())
+			if t.Name() == "TestWSServer_MaxConnections" {
+				assert.Equal(t, expectedGSwsError.Error(), err.Error())
+			}
+			if t.Name() == "TestFastWSServer_MaxConnections" {
+				assert.Equal(t, expectedFastwsError.Error(), err.Error())
+			}
 		}
 	}
 
 	for _, client := range closers {
 		client.Close()
+	}
+}
+
+func TestWebsocketClientHeaders(t *testing.T) {
+	t.Parallel()
+
+	endpoint, header, err := wsClientHeaders("wss://testuser:test-PASS_01@example.com:1234", "https://example.com")
+	if err != nil {
+		t.Fatalf("wsGetConfig failed: %s", err)
+	}
+	if endpoint != "wss://example.com:1234" {
+		t.Fatal("User should have been stripped from the URL")
+	}
+	if header.Get("authorization") != "Basic dGVzdHVzZXI6dGVzdC1QQVNTXzAx" {
+		t.Fatal("Basic auth header is incorrect")
+	}
+	if header.Get("origin") != "https://example.com" {
+		t.Fatal("Origin not set")
+	}
+}
+
+// This test checks that the server rejects connections from disallowed origins.
+func TestWebsocketOriginCheck(t *testing.T) {
+	t.Parallel()
+
+	var (
+		srv     = newTestServer("service", new(Service))
+		httpsrv = httptest.NewServer(srv.GSWebsocketHandler([]string{"http://example.com"}))
+		wsURL   = "ws:" + strings.TrimPrefix(httpsrv.URL, "http:")
+	)
+	defer srv.Stop()
+	defer httpsrv.Close()
+
+	client, err := DialWebsocket(context.Background(), wsURL, "http://ezample.com")
+	if err == nil {
+		client.Close()
+		t.Fatal("no error for wrong origin")
+	}
+	wantErr := gorillaws.ErrBadHandshake
+	if !reflect.DeepEqual(err, wantErr) {
+		t.Fatalf("wrong error for wrong origin: %q", err)
+	}
+}
+
+func TestWebsocketAuthCheck(t *testing.T) {
+	t.Parallel()
+
+	var (
+		srv     = newTestServer("websocket test", new(Service))
+		httpsrv = httptest.NewServer(srv.GSWebsocketHandler([]string{"http://example.com"}))
+		wsURL   = "ws://testuser:test-PASS_01@" + strings.TrimPrefix(httpsrv.URL, "http://")
+	)
+	connect := false
+	origHandler := httpsrv.Config.Handler
+	httpsrv.Config.Handler = http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			auth := r.Header.Get("Authorization")
+			//fmt.Println("Received auth header = ", auth)
+			expectedAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte("testuser:test-PASS_01"))
+			//fmt.Println("expected auth  = ", expectedAuth)
+			if r.Method == http.MethodGet && auth == expectedAuth {
+				connect = true
+				w.WriteHeader(http.StatusSwitchingProtocols)
+				return
+			}
+			if !connect {
+				http.Error(w, "connect with authorization not received", http.StatusMethodNotAllowed)
+				return
+			}
+			origHandler.ServeHTTP(w, r)
+		})
+	defer srv.Stop()
+	defer httpsrv.Close()
+
+	client, err := DialWebsocket(context.Background(), wsURL, "")
+	if err == nil {
+		client.Close()
+		t.Fatal("no error for connect with auth header")
+	}
+	if err != gorillaws.ErrBadHandshake {
+		//if err.Error() != "websocket: bad handshake" {
+		t.Fatalf("wrong error for header: %q", err)
 	}
 }

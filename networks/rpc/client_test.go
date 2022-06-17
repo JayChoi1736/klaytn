@@ -492,7 +492,8 @@ func TestClientReconnect(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		go http.Serve(l, srv.WebsocketHandler([]string{"*"}))
+		//go http.Serve(l, srv.WebsocketHandler([]string{"*"}))
+		go http.Serve(l, srv.GSWebsocketHandler([]string{"*"}))
 		return srv, l
 	}
 

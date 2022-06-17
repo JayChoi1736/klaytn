@@ -24,6 +24,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net"
@@ -31,8 +32,11 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"time"
+
+	gorillaws "github.com/gorilla/websocket"
 
 	"github.com/klaytn/klaytn/common"
 	"golang.org/x/net/websocket"
@@ -42,6 +46,11 @@ import (
 
 	fastws "github.com/clevergo/websocket"
 	"github.com/valyala/fasthttp"
+)
+
+const (
+	wsReadBuffer  = 1024
+	wsWriteBuffer = 1024
 )
 
 // websocketJSONCodec is a custom JSON codec with payload size enforcement and
@@ -60,6 +69,8 @@ var websocketJSONCodec = websocket.Codec{
 		return dec.Decode(v)
 	},
 }
+
+var wsBufferPool = new(sync.Pool)
 
 // WebsocketHandler returns a handler that serves JSON-RPC to WebSocket connections.
 //
@@ -101,6 +112,72 @@ func (srv *Server) WebsocketHandler(allowedOrigins []string) http.Handler {
 var upgrader = fastws.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+}
+
+// GSWebsocketHandler returns a handler that serves JSON-RPC to WebSocket connections.
+//
+// allowedOrigins should be a comma-separated list of allowed origin URLs.
+// To allow connections with any origin, pass "*".
+func (s *Server) GSWebsocketHandler(allowedOrigins []string) http.Handler {
+	var upgrader = gorillaws.Upgrader{
+		ReadBufferSize:  wsReadBuffer,
+		WriteBufferSize: wsWriteBuffer,
+		WriteBufferPool: wsBufferPool,
+		CheckOrigin:     GSwsHandshakeValidator(allowedOrigins),
+	}
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		conn, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			logger.Debug("WebSocket upgrade failed", "err", err)
+			return
+		}
+		if atomic.LoadInt32(&s.wsConnCount) >= MaxWebsocketConnections {
+			// Gorilla websocket uses websocket.WriteControl method to close connection
+			conn.WriteControl(gorillaws.CloseMessage, gorillaws.FormatCloseMessage(gorillaws.CloseGoingAway, "unexpected EOF"), time.Now().Add(time.Second))
+			return
+		}
+		atomic.AddInt32(&s.wsConnCount, 1)
+		wsConnCounter.Inc(1)
+		defer func() {
+			atomic.AddInt32(&s.wsConnCount, -1)
+			wsConnCounter.Dec(1)
+		}()
+
+		if WebsocketReadDeadline != 0 {
+			conn.SetReadDeadline(time.Now().Add(time.Duration(WebsocketReadDeadline) * time.Second))
+		}
+		if WebsocketWriteDeadline != 0 {
+			conn.SetWriteDeadline(time.Now().Add(time.Duration(WebsocketWriteDeadline) * time.Second))
+		}
+
+		//Create a custom encode/decode pair to enforce payload size and number encoding
+		encoder := func(v interface{}) error {
+			msg, err := json.Marshal(v)
+			if err != nil {
+				return err
+			}
+			err = conn.WriteMessage(websocket.TextFrame, msg)
+
+			if err != nil {
+				return err
+			}
+			return err
+		}
+		decoder := func(v interface{}) error {
+			_, data, err := conn.ReadMessage()
+			if err != nil {
+				return err
+			}
+			dec := json.NewDecoder(bytes.NewReader(data))
+			dec.UseNumber()
+			return dec.Decode(v)
+		}
+
+		codec := newWebsocketCodec(conn, encoder, decoder)
+
+		s.ServeCodec(codec, 0)
+	})
 }
 
 func (srv *Server) FastWebsocketHandler(ctx *fasthttp.RequestCtx) {
@@ -166,6 +243,15 @@ func (srv *Server) FastWebsocketHandler(ctx *fasthttp.RequestCtx) {
 func NewWSServer(allowedOrigins []string, srv *Server) *http.Server {
 	return &http.Server{
 		Handler: srv.WebsocketHandler(allowedOrigins),
+	}
+}
+
+// NewGSWSServer creates a new websocket RPC server around an API provider.
+//
+// Deprecated: use Server.WebsocketHandler
+func NewGSWSServer(allowedOrigins []string, srv *Server) *http.Server {
+	return &http.Server{
+		Handler: srv.GSWebsocketHandler(allowedOrigins),
 	}
 }
 
@@ -253,6 +339,50 @@ func wsHandshakeValidator(allowedOrigins []string) func(*websocket.Config, *http
 	return f
 }
 
+// GSwsHandshakeValidator returns a handler that verifies the origin during the
+// websocket upgrade process. When a '*' is specified as an allowed origins all
+// connections are accepted.
+func GSwsHandshakeValidator(allowedOrigins []string) func(*http.Request) bool {
+	origins := set.New()
+	allowAllOrigins := false
+
+	for _, origin := range allowedOrigins {
+		if origin == "*" {
+			allowAllOrigins = true
+		}
+		if origin != "" {
+			origins.Add(origin)
+		}
+	}
+	// allow localhost if no allowedOrigins are specified.
+	if len(origins.List()) == 0 {
+		origins.Add("http://localhost")
+		if hostname, err := os.Hostname(); err == nil {
+			origins.Add("http://" + hostname)
+		}
+	}
+	logger.Debug(fmt.Sprintf("Allowed origin(s) for WS RPC interface %v", origins.List()))
+
+	f := func(req *http.Request) bool {
+		// Skip origin verification if no Origin header is present. The origin check
+		// is supposed to protect against browser based attacks. Browsers always set
+		// Origin. Non-browser software can put anything in origin and checking it doesn't
+		// provide additional security.
+		if _, ok := req.Header["Origin"]; !ok {
+			return true
+		}
+		// Verify origin against allow list.
+		origin := strings.ToLower(req.Header.Get("Origin"))
+		if allowAllOrigins || origins.Has(origin) {
+			return true
+		}
+		logger.Warn("Rejected WebSocket connection", "origin", origin)
+		return false
+	}
+
+	return f
+}
+
 // DialWebsocket creates a new RPC client that communicates with a JSON-RPC server
 // that is listening on the given endpoint.
 //
@@ -270,14 +400,42 @@ func DialWebsocket(ctx context.Context, endpoint, origin string) (*Client, error
 			origin = "http://" + strings.ToLower(origin)
 		}
 	}
-	config, err := websocket.NewConfig(endpoint, origin)
+	endpoint, header, err := wsClientHeaders(endpoint, origin)
 	if err != nil {
 		return nil, err
 	}
+	return NewGorillaWSClient(ctx, func(ctx context.Context) (*gorillaws.Conn, error) {
+		dialer := gorillaws.Dialer{
+			ReadBufferSize:  wsReadBuffer,
+			WriteBufferSize: wsWriteBuffer,
+			WriteBufferPool: wsBufferPool,
+		}
 
-	return NewClient(ctx, func(ctx context.Context) (net.Conn, error) {
-		return wsDialContext(ctx, config)
+		conn, resp, err := dialer.Dial(endpoint, header)
+		//conn, _, err := dialer.Dial(endpoint, header)
+		_ = resp
+		if resp != nil && resp.Body != nil {
+			defer resp.Body.Close()
+		}
+		return conn, err
 	})
+}
+
+func wsClientHeaders(endpoint, origin string) (string, http.Header, error) {
+	endpointURL, err := url.Parse(endpoint)
+	if err != nil {
+		return endpoint, nil, err
+	}
+	header := make(http.Header)
+	if origin != "" {
+		header.Add("origin", origin)
+	}
+	if endpointURL.User != nil {
+		b64auth := base64.StdEncoding.EncodeToString([]byte(endpointURL.User.String()))
+		header.Add("authorization", "Basic "+b64auth)
+		endpointURL.User = nil
+	}
+	return endpointURL.String(), header, nil
 }
 
 func wsDialContext(ctx context.Context, config *websocket.Config) (*websocket.Conn, error) {
@@ -327,4 +485,11 @@ func contextDialer(ctx context.Context) *net.Dialer {
 		dialer.Deadline = time.Now().Add(defaultDialTimeout)
 	}
 	return dialer
+}
+
+func newWebsocketCodec(conn *gorillaws.Conn, encode func(v interface{}) error, decode func(v interface{}) error) ServerCodec {
+	conn.SetReadLimit(int64(common.MaxRequestContentLength))
+
+	//return GSNewCodec(conn, conn.WriteJSON, conn.ReadJSON)
+	return GSNewCodec(conn, encode, decode)
 }
