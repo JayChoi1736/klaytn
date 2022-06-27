@@ -119,7 +119,7 @@ func NewCodec(rwc io.ReadWriteCloser, encode, decode func(v interface{}) error) 
 	}
 }
 
-func GSNewCodec(conn deadlineCloser, encode, decode func(v interface{}) error) ServerCodec {
+func NewFuncCodec(conn deadlineCloser, encode, decode func(v interface{}) error) ServerCodec {
 	return &jsonCodec{
 		closed: make(chan interface{}),
 		encode: encode,

@@ -31,7 +31,7 @@ import (
 	"testing"
 	"time"
 
-	gorillaws "github.com/gorilla/websocket"
+	"github.com/gorilla/websocket"
 
 	"github.com/klaytn/klaytn/common"
 	"github.com/stretchr/testify/assert"
@@ -65,7 +65,6 @@ func TestWebsocketLargeCallFastws(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client, err := DialWebsocket(ctx, wsAddr, "")
-	//fmt.Println("dial web socket ", client, err)
 	if err != nil {
 		t.Fatalf("can't dial: %v", err)
 	}
@@ -98,7 +97,7 @@ func TestWebsocketLargeCall(t *testing.T) {
 	// create server
 	var (
 		srv     = newTestServer("service", new(Service))
-		httpsrv = httptest.NewServer(srv.GSWebsocketHandler([]string{"*"}))
+		httpsrv = httptest.NewServer(srv.WebsocketHandler([]string{"*"}))
 		wsAddr  = "ws:" + strings.TrimPrefix(httpsrv.URL, "http:")
 	)
 	defer srv.Stop()
@@ -150,7 +149,7 @@ func TestWSServer_MaxConnections(t *testing.T) {
 	defer srv.Stop()
 	defer ln.Close()
 
-	go NewGSWSServer([]string{"*"}, srv).Serve(ln)
+	go NewWSServer([]string{"*"}, srv).Serve(ln)
 	time.Sleep(100 * time.Millisecond)
 
 	// set max websocket connections
@@ -177,12 +176,12 @@ func TestFastWSServer_MaxConnections(t *testing.T) {
 
 func testWebsocketMaxConnections(t *testing.T, addr string, maxConnections int) {
 	var closers []*Client
-	var expectedGSwsError = gorillaws.CloseError{
-		Code: gorillaws.CloseGoingAway,
+	var expectedGSwsError = websocket.CloseError{
+		Code: websocket.CloseGoingAway,
 		Text: "unexpected EOF",
 	}
-	var expectedFastwsError = gorillaws.CloseError{
-		Code: gorillaws.CloseAbnormalClosure,
+	var expectedFastwsError = websocket.CloseError{
+		Code: websocket.CloseAbnormalClosure,
 		Text: "unexpected EOF",
 	}
 
@@ -202,7 +201,6 @@ func testWebsocketMaxConnections(t *testing.T, addr string, maxConnections int) 
 			assert.Equal(t, arg, result.String, "wrong string echoed")
 		} else {
 			assert.Error(t, err)
-			//assert.Equal(t, "EOF", err.Error())
 			if t.Name() == "TestWSServer_MaxConnections" {
 				assert.Equal(t, expectedGSwsError.Error(), err.Error())
 			}
@@ -241,7 +239,7 @@ func TestWebsocketOriginCheck(t *testing.T) {
 
 	var (
 		srv     = newTestServer("service", new(Service))
-		httpsrv = httptest.NewServer(srv.GSWebsocketHandler([]string{"http://example.com"}))
+		httpsrv = httptest.NewServer(srv.WebsocketHandler([]string{"http://example.com"}))
 		wsURL   = "ws:" + strings.TrimPrefix(httpsrv.URL, "http:")
 	)
 	defer srv.Stop()
@@ -252,7 +250,7 @@ func TestWebsocketOriginCheck(t *testing.T) {
 		client.Close()
 		t.Fatal("no error for wrong origin")
 	}
-	wantErr := gorillaws.ErrBadHandshake
+	wantErr := websocket.ErrBadHandshake
 	if !reflect.DeepEqual(err, wantErr) {
 		t.Fatalf("wrong error for wrong origin: %q", err)
 	}
@@ -263,7 +261,7 @@ func TestWebsocketAuthCheck(t *testing.T) {
 
 	var (
 		srv     = newTestServer("websocket test", new(Service))
-		httpsrv = httptest.NewServer(srv.GSWebsocketHandler([]string{"http://example.com"}))
+		httpsrv = httptest.NewServer(srv.WebsocketHandler([]string{"http://example.com"}))
 		wsURL   = "ws://testuser:test-PASS_01@" + strings.TrimPrefix(httpsrv.URL, "http://")
 	)
 	connect := false
@@ -271,9 +269,7 @@ func TestWebsocketAuthCheck(t *testing.T) {
 	httpsrv.Config.Handler = http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			auth := r.Header.Get("Authorization")
-			//fmt.Println("Received auth header = ", auth)
 			expectedAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte("testuser:test-PASS_01"))
-			//fmt.Println("expected auth  = ", expectedAuth)
 			if r.Method == http.MethodGet && auth == expectedAuth {
 				connect = true
 				w.WriteHeader(http.StatusSwitchingProtocols)
@@ -293,8 +289,7 @@ func TestWebsocketAuthCheck(t *testing.T) {
 		client.Close()
 		t.Fatal("no error for connect with auth header")
 	}
-	if err != gorillaws.ErrBadHandshake {
-		//if err.Error() != "websocket: bad handshake" {
+	if err != websocket.ErrBadHandshake {
 		t.Fatalf("wrong error for header: %q", err)
 	}
 }
