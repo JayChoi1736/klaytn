@@ -53,6 +53,23 @@ func TestClientRequest(t *testing.T) {
 	}
 }
 
+func TestClientResponseType(t *testing.T) {
+	server := newTestServer("service", new(Service))
+	defer server.Stop()
+	client := DialInProc(server)
+	defer client.Close()
+
+	if err := client.Call(nil, "service_echo", "hello", 10, &Args{"world"}); err != nil {
+		t.Errorf("Passing nil as result should be fine, but got an error: %v", err)
+	}
+	// Note: passing the var, not a ref
+	var resultVar Result
+	err := client.Call(resultVar, "service_echo", "hello", 10, &Args{"world"})
+	if err == nil {
+		t.Error("Passing a var as result should be an error")
+	}
+}
+
 func TestClientBatchRequest(t *testing.T) {
 	server := newTestServer("service", new(Service))
 	defer server.Stop()
@@ -493,7 +510,7 @@ func TestClientReconnect(t *testing.T) {
 			t.Fatal(err)
 		}
 		//go http.Serve(l, srv.WebsocketHandler([]string{"*"}))
-		go http.Serve(l, srv.GSWebsocketHandler([]string{"*"}))
+		go http.Serve(l, srv.WebsocketHandler([]string{"*"}))
 		return srv, l
 	}
 
