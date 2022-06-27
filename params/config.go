@@ -21,6 +21,7 @@
 package params
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/big"
 
@@ -136,14 +137,12 @@ var (
 	}
 )
 
-var (
-	// VMLogTarget sets the output target of vmlog.
-	// The values below can be OR'ed.
-	//  - 0x0: no output (default)
-	//  - 0x1: file (DATADIR/logs/vm.log)
-	//  - 0x2: stdout (like logger.DEBUG)
-	VMLogTarget = 0x0
-)
+// VMLogTarget sets the output target of vmlog.
+// The values below can be OR'ed.
+//  - 0x0: no output (default)
+//  - 0x1: file (DATADIR/logs/vm.log)
+//  - 0x2: stdout (like logger.DEBUG)
+var VMLogTarget = 0x0
 
 const (
 	VMLogToFile   = 0x1
@@ -270,6 +269,13 @@ func (c *ChainConfig) String() string {
 			engine,
 		)
 	}
+}
+
+func (c *ChainConfig) Copy() *ChainConfig {
+	r := &ChainConfig{}
+	j, _ := json.Marshal(c)
+	json.Unmarshal(j, r)
+	return r
 }
 
 // IsIstanbulForkEnabled returns whether num is either equal to the istanbul block or greater.
