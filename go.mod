@@ -30,7 +30,6 @@ require (
 	github.com/jackpal/go-nat-pmp v1.0.1
 	github.com/jinzhu/gorm v1.9.15
 	github.com/julienschmidt/httprouter v1.2.0
-	github.com/klaytn/xgo v0.0.0-20220420020737-0d7e3e080122 // indirect
 	github.com/mattn/go-colorable v0.1.2
 	github.com/mattn/go-runewidth v0.0.2 // indirect
 	github.com/naoina/go-stringutil v0.1.0 // indirect
@@ -62,6 +61,7 @@ require (
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	golang.org/x/net v0.0.0-20200813134508-3edf25e44fcc
 	golang.org/x/sys v0.0.0-20211025112917-711f33c9992c
+	golang.org/x/tools v0.0.0-20190912185636-87d9f09c5d89
 	google.golang.org/grpc v1.27.0
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15
 	gopkg.in/fatih/set.v0 v0.1.0
