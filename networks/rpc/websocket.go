@@ -184,24 +184,12 @@ func wsClientHeaders(endpoint, origin string) (string, http.Header, error) {
 		return endpoint, nil, err
 	}
 
-	// set origin header with os hostname when no origin is set
-	// because TestStartRPC in node/api_test.go fails when origin is null
-	// fails when websocket related test on runTestWithServerType(t, test, "fasthttp")
+	header := make(http.Header)
 
-	if origin == "" {
-		var err error
-		if origin, err = os.Hostname(); err != nil {
-			return endpoint, nil, err
-		}
-		if endpointURL.Scheme == "wss" {
-			origin = "https://" + strings.ToLower(origin)
-		} else {
-			origin = "http://" + strings.ToLower(origin)
-		}
+	if origin != "" {
+		header.Add("origin", origin)
 	}
 
-	header := make(http.Header)
-	header.Add("origin", origin)
 	if endpointURL.User != nil {
 		b64auth := base64.StdEncoding.EncodeToString([]byte(endpointURL.User.String()))
 		header.Add("authorization", "Basic "+b64auth)
@@ -261,8 +249,13 @@ func wsFastHandshakeValidator(allowedOrigins []string) func(ctx *fasthttp.Reques
 	logger.Debug(fmt.Sprintf("Allowed origin(s) for WS RPC interface %v\n", origins.List()))
 
 	f := func(ctx *fasthttp.RequestCtx) bool {
+		// Skip origin verification if no Origin header is present. The origin check
+		// is supposed to protect against browser based attacks. Browsers always set
+		// Origin. Non-browser software can put anything in origin and checking it doesn't
+		// provide additional security.
+
 		origin := strings.ToLower(string(ctx.Request.Header.Peek("Origin")))
-		if allowAllOrigins || origins.Has(origin) {
+		if allowAllOrigins || origins.Has(origin) || origin == "" {
 			return true
 		}
 		logger.Warn(fmt.Sprintf("origin '%s' not allowed on WS-RPC interface\n", origin))

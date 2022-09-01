@@ -22,6 +22,7 @@ package rpc
 
 import (
 	"context"
+	"encoding/base64"
 	"net"
 	"net/http"
 	"net/http/httptest"
@@ -334,5 +335,44 @@ func wsPingTestHandler(t *testing.T, conn *websocket.Conn, shutdown, sendPing <-
 			conn.Close()
 			return
 		}
+	}
+}
+
+func TestWebsocketAuthCheck(t *testing.T) {
+	t.Parallel()
+
+	var (
+		srv     = newTestServer("service", new(Service))
+		httpsrv = httptest.NewServer(srv.WebsocketHandler([]string{"http://example.com"}))
+		wsURL   = "ws://testuser:test-PASS_01@" + strings.TrimPrefix(httpsrv.URL, "http://")
+	)
+	connect := false
+	origHandler := httpsrv.Config.Handler
+	httpsrv.Config.Handler = http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			auth := r.Header.Get("Authorization")
+			expectedAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte("testuser:test-PASS_01"))
+			if r.Method == http.MethodGet && auth == expectedAuth {
+				connect = true
+				w.WriteHeader(http.StatusSwitchingProtocols)
+				return
+			}
+			if !connect {
+				http.Error(w, "connect with authorization not received", http.StatusMethodNotAllowed)
+				return
+			}
+			origHandler.ServeHTTP(w, r)
+		})
+	defer srv.Stop()
+	defer httpsrv.Close()
+
+	client, err := DialWebsocket(context.Background(), wsURL, "http://example.com")
+	if err == nil {
+		client.Close()
+		t.Fatal("no error for connect with auth header")
+	}
+	wantErr := wsHandshakeError{websocket.ErrBadHandshake, "101 Switching Protocols"}
+	if !reflect.DeepEqual(err, wantErr) {
+		t.Fatalf("wrong error for auth header: %q", err)
 	}
 }

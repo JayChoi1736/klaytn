@@ -34,8 +34,6 @@ import (
 	"time"
 
 	"github.com/klaytn/klaytn/common"
-
-	//"github.com/ethereum/go-ethereum/log"
 	"github.com/rs/cors"
 
 	"github.com/valyala/fasthttp"
@@ -55,17 +53,7 @@ type httpConn struct {
 	req       *http.Request
 	closeOnce sync.Once
 	closeCh   chan interface{}
-	//CreateErrorResponse(id interface{}, err Error) interface{}
-	//ParseRequestArguments(argTypes []reflect.Type, params interface{}) ([]reflect.Value, Error)
-	//// Assemble success response, expects response id and payload
-	//CreateResponse(id interface{}, reply interface{}) interface{}
 }
-
-//func (hc *httpConn) ReadRequestHeaders() ([]rpcRequest, bool, Error) {
-//	//TODO implement me
-//	//panic("implement me")
-//	panic("ReadRequestHeaders called on httpConn")
-//}
 
 // httpConn is treated specially by Client.
 func (hc *httpConn) writeJSON(context.Context, interface{}) error {

@@ -45,10 +45,9 @@ var (
 
 const (
 	// Timeouts
-	tcpKeepAliveInterval = 30 * time.Second
-	defaultDialTimeout   = 10 * time.Second // used if context has no deadline
-	defaultWriteTimeout  = 10 * time.Second // used if context has no deadline
-	subscribeTimeout     = 10 * time.Second // overall timeout eth_subscribe, rpc_modules calls
+	defaultDialTimeout  = 10 * time.Second // used if context has no deadline
+	defaultWriteTimeout = 10 * time.Second // used if context has no deadline
+	subscribeTimeout    = 10 * time.Second // overall timeout eth_subscribe, rpc_modules calls
 )
 
 const (
