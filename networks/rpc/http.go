@@ -116,9 +116,10 @@ type HTTPTimeouts struct {
 // DefaultHTTPTimeouts represents the default timeout values used if further
 // configuration is not provided.
 var DefaultHTTPTimeouts = HTTPTimeouts{
-	ReadTimeout:  30 * time.Second,
-	WriteTimeout: 30 * time.Second,
-	IdleTimeout:  120 * time.Second,
+	ReadTimeout:      30 * time.Second,
+	WriteTimeout:     30 * time.Second,
+	IdleTimeout:      120 * time.Second,
+	ExecutionTimeout: 30 * time.Second,
 }
 
 // DialHTTPWithClient creates a new RPC client that connects to an RPC server over HTTP
@@ -247,19 +248,8 @@ func NewHTTPServer(cors []string, vhosts []string, timeouts HTTPTimeouts, srv ht
 	handler := newCorsHandler(srv, cors)
 	handler = newVHostHandler(vhosts, handler)
 
-	// Make sure timeout values are meaningful
-	if timeouts.ReadTimeout < time.Second {
-		logger.Warn("Sanitizing invalid HTTP read timeout", "provided", timeouts.ReadTimeout, "updated", DefaultHTTPTimeouts.ReadTimeout)
-		timeouts.ReadTimeout = DefaultHTTPTimeouts.ReadTimeout
-	}
-	if timeouts.WriteTimeout < time.Second {
-		logger.Warn("Sanitizing invalid HTTP write timeout", "provided", timeouts.WriteTimeout, "updated", DefaultHTTPTimeouts.WriteTimeout)
-		timeouts.WriteTimeout = DefaultHTTPTimeouts.WriteTimeout
-	}
-	if timeouts.IdleTimeout < time.Second {
-		logger.Warn("Sanitizing invalid HTTP idle timeout", "provided", timeouts.IdleTimeout, "updated", DefaultHTTPTimeouts.IdleTimeout)
-		timeouts.IdleTimeout = DefaultHTTPTimeouts.IdleTimeout
-	}
+	timeouts = sanitizeTimeouts(timeouts)
+
 	// Bundle and start the HTTP server
 	return &http.Server{
 		Handler:      handler,
@@ -388,6 +378,7 @@ func newVHostHandler(vhosts []string, next http.Handler) http.Handler {
 }
 
 func NewFastHTTPServer(cors []string, vhosts []string, timeouts HTTPTimeouts, srv *Server) *fasthttp.Server {
+	timeouts = sanitizeTimeouts(timeouts)
 	if len(cors) == 0 {
 		for _, vhost := range vhosts {
 			if vhost == "*" {
@@ -475,4 +466,27 @@ func validateFastRequest(requestCtx *fasthttp.RequestCtx) (int, error) {
 		return http.StatusUnsupportedMediaType, err
 	}
 	return 0, nil
+}
+
+// sanitizeTimeouts sets timeouts to default one if timeout is too short.
+func sanitizeTimeouts(timeouts HTTPTimeouts) HTTPTimeouts {
+	// Make sure timeout values are meaningful
+	if timeouts.ReadTimeout < time.Second {
+		logger.Warn("Sanitizing invalid HTTP read timeout", "provided", timeouts.ReadTimeout, "updated", DefaultHTTPTimeouts.ReadTimeout)
+		timeouts.ReadTimeout = DefaultHTTPTimeouts.ReadTimeout
+	}
+	if timeouts.WriteTimeout < time.Second {
+		logger.Warn("Sanitizing invalid HTTP write timeout", "provided", timeouts.WriteTimeout, "updated", DefaultHTTPTimeouts.WriteTimeout)
+		timeouts.WriteTimeout = DefaultHTTPTimeouts.WriteTimeout
+	}
+	if timeouts.IdleTimeout < time.Second {
+		logger.Warn("Sanitizing invalid HTTP idle timeout", "provided", timeouts.IdleTimeout, "updated", DefaultHTTPTimeouts.IdleTimeout)
+		timeouts.IdleTimeout = DefaultHTTPTimeouts.IdleTimeout
+	}
+	if timeouts.ExecutionTimeout < time.Second {
+		logger.Warn("Sanitizing invalid HTTP execution timeout", "provided", timeouts.ExecutionTimeout, "updated", DefaultHTTPTimeouts.ExecutionTimeout)
+		timeouts.ExecutionTimeout = DefaultHTTPTimeouts.ExecutionTimeout
+	}
+
+	return timeouts
 }
