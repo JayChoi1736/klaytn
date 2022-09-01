@@ -345,7 +345,7 @@ func (h *handler) handleSubscribe(cp *callProc, msg *jsonrpcMessage) *jsonrpcMes
 		return msg.errorResponse(ErrNotificationsUnsupported)
 	}
 
-	if int32(len(h.clientSubs)) >= MaxSubscriptionPerWSConn {
+	if int32(len(h.serverSubs)) >= MaxSubscriptionPerWSConn {
 		rpcErrorResponsesCounter.Inc(1)
 		return msg.errorResponse(&callbackError{
 			fmt.Sprintf("Maximum %d subscriptions are allowed for a websocket connection. "+
