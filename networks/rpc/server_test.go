@@ -141,7 +141,6 @@ func testServerMethodExecution(t *testing.T, method string) {
 	if !msg.isResponse() {
 		t.Fatal("message is not response")
 	}
-
 }
 
 func TestServerMethodExecution(t *testing.T) {

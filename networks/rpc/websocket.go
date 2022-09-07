@@ -63,7 +63,7 @@ func NewWSServer(allowedOrigins []string, srv *Server) *http.Server {
 // allowedOrigins should be a comma-separated list of allowed origin URLs.
 // To allow connections with any origin, pass "*".
 func (s *Server) WebsocketHandler(allowedOrigins []string) http.Handler {
-	var upgrader = websocket.Upgrader{
+	upgrader := websocket.Upgrader{
 		ReadBufferSize:  wsReadBuffer,
 		WriteBufferSize: wsWriteBuffer,
 		WriteBufferPool: wsBufferPool,
@@ -163,14 +163,12 @@ func DialWebsocket(ctx context.Context, endpoint, origin string) (*Client, error
 		conn, resp, err := dialer.DialContext(ctx, endpoint, header)
 		if resp != nil && resp.Body != nil {
 			defer resp.Body.Close()
-
 		}
 
 		if err != nil {
 			hErr := wsHandshakeError{err: err}
 			if resp != nil {
 				hErr.status = resp.Status
-
 			}
 			return nil, hErr
 		}
@@ -289,7 +287,7 @@ func (srv *Server) FastWebsocketHandler(ctx *fasthttp.RequestCtx) {
 		if WebsocketWriteDeadline != 0 {
 			conn.SetWriteDeadline(time.Now().Add(time.Duration(WebsocketWriteDeadline) * time.Second))
 		}
-		//Create a custom encode/decode pair to enforce payload size and number encoding
+		// Create a custom encode/decode pair to enforce payload size and number encoding
 		encoder := func(v interface{}) error {
 			msg, err := json.Marshal(v)
 			if err != nil {

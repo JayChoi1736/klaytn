@@ -36,7 +36,6 @@ import (
 
 	"github.com/klaytn/klaytn/common"
 	"github.com/rs/cors"
-
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/fasthttpadaptor"
 )
@@ -238,6 +237,9 @@ func (t *httpServerConn) remoteAddr() string {
 	return t.r.RemoteAddr
 }
 
+// SetWriteDeadline does nothing and always returns nil.
+func (t *httpServerConn) SetWriteDeadline(time.Time) error { return nil }
+
 func newHTTPServerConn(r *http.Request, w http.ResponseWriter) ServerCodec {
 	body := io.LimitReader(r.Body, int64(common.MaxRequestContentLength))
 	conn := &httpServerConn{Reader: body, Writer: w, r: r}
@@ -256,9 +258,6 @@ func (t *httpReadWriteNopCloser) SetWriteDeadline(t2 time.Time) error { return n
 func (t *httpReadWriteNopCloser) Close() error {
 	return nil
 }
-
-// SetWriteDeadline does nothing and always returns nil.
-func (t *httpServerConn) SetWriteDeadline(time.Time) error { return nil }
 
 // NewHTTPServer creates a new HTTP RPC server around an API provider.
 //
@@ -438,7 +437,6 @@ func NewFastHTTPServer(cors []string, vhosts []string, timeouts HTTPTimeouts, sr
 }
 
 func (srv *Server) HandleFastHTTP(requestCtx *fasthttp.RequestCtx) {
-
 	r := &requestCtx.Request
 	w := &requestCtx.Response
 
