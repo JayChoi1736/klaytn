@@ -287,7 +287,7 @@ func (srv *Server) FastWebsocketHandler(ctx *fasthttp.RequestCtx) {
 		if WebsocketWriteDeadline != 0 {
 			conn.SetWriteDeadline(time.Now().Add(time.Duration(WebsocketWriteDeadline) * time.Second))
 		}
-		//Create a custom encode/decode pair to enforce payload size and number encoding
+		// Create a custom encode/decode pair to enforce payload size and number encoding
 		encoder := func(v interface{}) error {
 			msg, err := json.Marshal(v)
 			if err != nil {
