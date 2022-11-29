@@ -331,11 +331,6 @@ func (h *handler) handleCallMsg(ctx *callProc, msg *jsonrpcMessage) *jsonrpcMess
 		return nil
 	case msg.isCall():
 		resp := h.handleCall(ctx, msg)
-		if resp.Error != nil {
-			logger.Warn("Served "+msg.Method, "reqid", idForLog{msg.ID}, "duration", time.Since(start), "err", resp.Error.Message)
-		} else {
-			logger.Debug("Served "+msg.Method, "reqid", idForLog{msg.ID}, "duration", time.Since(start))
-		}
 		return resp
 	case msg.hasValidID():
 		rpcErrorResponsesCounter.Inc(1)
