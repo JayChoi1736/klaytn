@@ -43,7 +43,7 @@ const (
 	OptionSubscriptions = 1 << iota // support pub sub
 
 	// pendingRequestLimit is a limit for concurrent RPC method calls
-	pendingRequestLimit = 200000
+	pendingRequestLimit = 3000
 )
 
 var (
