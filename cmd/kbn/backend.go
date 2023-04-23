@@ -130,10 +130,9 @@ func (b *BN) DeleteAuthorizedNodes(rawurl string) error {
 func (b *BN) APIs() []rpc.API {
 	return []rpc.API{
 		{
-			Namespace: "new",
+			Namespace: "bootnode",
 			Version:   "1.0",
 			Service:   NewPrivateBootnodeAPI(b),
-			Public:    true,
 		},
 		{
 			Namespace: "bootnode",
