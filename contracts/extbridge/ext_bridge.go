@@ -157,7 +157,7 @@ func bindAddress(address common.Address, caller bind.ContractCaller, transactor 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Address *AddressRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Address *AddressRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Address.Contract.AddressCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -176,7 +176,7 @@ func (_Address *AddressRaw) Transact(opts *bind.TransactOpts, method string, par
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Address *AddressCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Address *AddressCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Address.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -331,7 +331,7 @@ func (_BridgeFee *BridgeFeeRaw) Transact(opts *bind.TransactOpts, method string,
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_BridgeFee *BridgeFeeCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_BridgeFee *BridgeFeeCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _BridgeFee.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -350,12 +350,15 @@ func (_BridgeFee *BridgeFeeTransactorRaw) Transact(opts *bind.TransactOpts, meth
 //
 // Solidity: function feeOfERC20(address ) view returns(uint256)
 func (_BridgeFee *BridgeFeeCaller) FeeOfERC20(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
-	var (
-		ret0 = new(*big.Int)
-	)
-	out := ret0
-	err := _BridgeFee.contract.Call(opts, out, "feeOfERC20", arg0)
-	return *ret0, err
+	var out []interface{}
+	err := _BridgeFee.contract.Call(opts, &out, "feeOfERC20", arg0)
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(big.Int)).(**big.Int)
+
+	return out0, err
 }
 
 // FeeOfERC20 is a free data retrieval call binding the contract method 0x488af871.
@@ -402,12 +405,15 @@ func (_BridgeFee *BridgeFeeCallerSession) FeeOfKLAY() (*big.Int, error) {
 //
 // Solidity: function feeReceiver() view returns(address)
 func (_BridgeFee *BridgeFeeCaller) FeeReceiver(opts *bind.CallOpts) (common.Address, error) {
-	var (
-		ret0 = new(common.Address)
-	)
-	out := ret0
-	err := _BridgeFee.contract.Call(opts, out, "feeReceiver")
-	return *ret0, err
+	var out []interface{}
+	err := _BridgeFee.contract.Call(opts, &out, "feeReceiver")
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
 }
 
 // FeeReceiver is a free data retrieval call binding the contract method 0xb3f00674.
@@ -1017,7 +1023,7 @@ func (_BridgeHandledRequests *BridgeHandledRequestsRaw) Transact(opts *bind.Tran
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_BridgeHandledRequests *BridgeHandledRequestsCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_BridgeHandledRequests *BridgeHandledRequestsCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _BridgeHandledRequests.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -1190,7 +1196,7 @@ func bindBridgeOperator(address common.Address, caller bind.ContractCaller, tran
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_BridgeOperator *BridgeOperatorRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_BridgeOperator *BridgeOperatorRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _BridgeOperator.Contract.BridgeOperatorCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -1209,7 +1215,7 @@ func (_BridgeOperator *BridgeOperatorRaw) Transact(opts *bind.TransactOpts, meth
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_BridgeOperator *BridgeOperatorCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_BridgeOperator *BridgeOperatorCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _BridgeOperator.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -1228,12 +1234,15 @@ func (_BridgeOperator *BridgeOperatorTransactorRaw) Transact(opts *bind.Transact
 //
 // Solidity: function MAX_OPERATOR() view returns(uint64)
 func (_BridgeOperator *BridgeOperatorCaller) MAXOPERATOR(opts *bind.CallOpts) (uint64, error) {
-	var (
-		ret0 = new(uint64)
-	)
-	out := ret0
-	err := _BridgeOperator.contract.Call(opts, out, "MAX_OPERATOR")
-	return *ret0, err
+	var out []interface{}
+	err := _BridgeOperator.contract.Call(opts, &out, "MAX_OPERATOR")
+	if err != nil {
+		return *new(uint64), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint64)).(*uint64)
+
+	return out0, err
 }
 
 // MAXOPERATOR is a free data retrieval call binding the contract method 0x3a3099d1.
@@ -1254,12 +1263,16 @@ func (_BridgeOperator *BridgeOperatorCallerSession) MAXOPERATOR() (uint64, error
 //
 // Solidity: function closedValueTransferVotes(uint64 ) view returns(bool)
 func (_BridgeOperator *BridgeOperatorCaller) ClosedValueTransferVotes(opts *bind.CallOpts, arg0 uint64) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _BridgeOperator.contract.Call(opts, out, "closedValueTransferVotes", arg0)
-	return *ret0, err
+	var out []interface{}
+	err := _BridgeOperator.contract.Call(opts, &out, "closedValueTransferVotes", arg0)
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
 }
 
 // ClosedValueTransferVotes is a free data retrieval call binding the contract method 0x9832c1d7.
@@ -1284,7 +1297,7 @@ func (_BridgeOperator *BridgeOperatorCaller) ConfigurationNonce(opts *bind.CallO
 		ret0 = new(uint64)
 	)
 	out := ret0
-	err := _BridgeOperator.contract.Call(opts, out, "configurationNonce")
+	err := _BridgeOperator.contract.Call(opts, &out, "configurationNonce")
 	return *ret0, err
 }
 
@@ -1306,12 +1319,16 @@ func (_BridgeOperator *BridgeOperatorCallerSession) ConfigurationNonce() (uint64
 //
 // Solidity: function getOperatorList() view returns(address[])
 func (_BridgeOperator *BridgeOperatorCaller) GetOperatorList(opts *bind.CallOpts) ([]common.Address, error) {
-	var (
-		ret0 = new([]common.Address)
-	)
-	out := ret0
-	err := _BridgeOperator.contract.Call(opts, out, "getOperatorList")
-	return *ret0, err
+	var out []interface{}
+	err := _BridgeOperator.contract.Call(opts, &out, "getOperatorList")
+	
+	if err != nil {
+		return *new([]common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new([]common.Address)).(*[]common.Address)
+
+	return out0, err
 }
 
 // GetOperatorList is a free data retrieval call binding the contract method 0xb2c01030.
@@ -1332,12 +1349,15 @@ func (_BridgeOperator *BridgeOperatorCallerSession) GetOperatorList() ([]common.
 //
 // Solidity: function isOwner() view returns(bool)
 func (_BridgeOperator *BridgeOperatorCaller) IsOwner(opts *bind.CallOpts) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _BridgeOperator.contract.Call(opts, out, "isOwner")
-	return *ret0, err
+	var out []interface{}
+	err := _BridgeOperator.contract.Call(opts, &out, "isOwner")
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
 }
 
 // IsOwner is a free data retrieval call binding the contract method 0x8f32d59b.
@@ -1358,12 +1378,15 @@ func (_BridgeOperator *BridgeOperatorCallerSession) IsOwner() (bool, error) {
 //
 // Solidity: function operatorList(uint256 ) view returns(address)
 func (_BridgeOperator *BridgeOperatorCaller) OperatorList(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
-	var (
-		ret0 = new(common.Address)
-	)
-	out := ret0
-	err := _BridgeOperator.contract.Call(opts, out, "operatorList", arg0)
-	return *ret0, err
+	var out []interface{}
+	err := _BridgeOperator.contract.Call(opts, &out, "operatorList", arg0)
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
 }
 
 // OperatorList is a free data retrieval call binding the contract method 0xcb38f407.
@@ -1384,12 +1407,15 @@ func (_BridgeOperator *BridgeOperatorCallerSession) OperatorList(arg0 *big.Int) 
 //
 // Solidity: function operatorThresholds(uint8 ) view returns(uint8)
 func (_BridgeOperator *BridgeOperatorCaller) OperatorThresholds(opts *bind.CallOpts, arg0 uint8) (uint8, error) {
-	var (
-		ret0 = new(uint8)
-	)
-	out := ret0
-	err := _BridgeOperator.contract.Call(opts, out, "operatorThresholds", arg0)
-	return *ret0, err
+	var out []interface{}
+	err := _BridgeOperator.contract.Call(opts, &out, "operatorThresholds", arg0)
+	if err != nil {
+		return *new(uint8), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint8)).(*uint8)
+
+	return out0, err
 }
 
 // OperatorThresholds is a free data retrieval call binding the contract method 0x5526f76b.
@@ -1410,12 +1436,15 @@ func (_BridgeOperator *BridgeOperatorCallerSession) OperatorThresholds(arg0 uint
 //
 // Solidity: function operators(address ) view returns(bool)
 func (_BridgeOperator *BridgeOperatorCaller) Operators(opts *bind.CallOpts, arg0 common.Address) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _BridgeOperator.contract.Call(opts, out, "operators", arg0)
-	return *ret0, err
+	var out []interface{}
+	err := _BridgeOperator.contract.Call(opts, &out, "operators", arg0)
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
 }
 
 // Operators is a free data retrieval call binding the contract method 0x13e7c9d8.
@@ -1436,12 +1465,15 @@ func (_BridgeOperator *BridgeOperatorCallerSession) Operators(arg0 common.Addres
 //
 // Solidity: function owner() view returns(address)
 func (_BridgeOperator *BridgeOperatorCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
-	var (
-		ret0 = new(common.Address)
-	)
-	out := ret0
-	err := _BridgeOperator.contract.Call(opts, out, "owner")
-	return *ret0, err
+	var out []interface{}
+	err := _BridgeOperator.contract.Call(opts, &out, "owner")
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
 }
 
 // Owner is a free data retrieval call binding the contract method 0x8da5cb5b.

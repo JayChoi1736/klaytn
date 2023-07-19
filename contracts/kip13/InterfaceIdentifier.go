@@ -145,7 +145,7 @@ func bindInterfaceIdentifier(address common.Address, caller bind.ContractCaller,
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_InterfaceIdentifier *InterfaceIdentifierRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_InterfaceIdentifier *InterfaceIdentifierRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _InterfaceIdentifier.Contract.InterfaceIdentifierCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -164,7 +164,7 @@ func (_InterfaceIdentifier *InterfaceIdentifierRaw) Transact(opts *bind.Transact
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_InterfaceIdentifier *InterfaceIdentifierCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_InterfaceIdentifier *InterfaceIdentifierCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _InterfaceIdentifier.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -183,12 +183,16 @@ func (_InterfaceIdentifier *InterfaceIdentifierTransactorRaw) Transact(opts *bin
 //
 // Solidity: function supportsInterface(bytes4 interfaceID) view returns(bool)
 func (_InterfaceIdentifier *InterfaceIdentifierCaller) SupportsInterface(opts *bind.CallOpts, interfaceID [4]byte) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _InterfaceIdentifier.contract.Call(opts, out, "supportsInterface", interfaceID)
-	return *ret0, err
+	var out []interface{}
+	err := _InterfaceIdentifier.contract.Call(opts, &out, "supportsInterface", interfaceID)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
 }
 
 // SupportsInterface is a free data retrieval call binding the contract method 0x01ffc9a7.

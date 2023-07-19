@@ -157,7 +157,7 @@ func bindAddress(address common.Address, caller bind.ContractCaller, transactor 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Address *AddressRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Address *AddressRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Address.Contract.AddressCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -176,7 +176,7 @@ func (_Address *AddressRaw) Transact(opts *bind.TransactOpts, method string, par
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Address *AddressCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Address *AddressCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Address.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -417,12 +417,16 @@ func (_Bridge *BridgeTransactorRaw) Transact(opts *bind.TransactOpts, method str
 //
 // Solidity: function MAX_OPERATOR() view returns(uint64)
 func (_Bridge *BridgeCaller) MAXOPERATOR(opts *bind.CallOpts) (uint64, error) {
-	var (
-		ret0 = new(uint64)
-	)
-	out := ret0
-	err := _Bridge.contract.Call(opts, out, "MAX_OPERATOR")
-	return *ret0, err
+	var out []interface{}
+	err := _Bridge.contract.Call(opts, &out, "MAX_OPERATOR")
+	if err != nil {
+		return *new(uint64), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint64)).(*uint64)
+
+	return out0, err
+
 }
 
 // MAXOPERATOR is a free data retrieval call binding the contract method 0x3a3099d1.
@@ -443,12 +447,15 @@ func (_Bridge *BridgeCallerSession) MAXOPERATOR() (uint64, error) {
 //
 // Solidity: function VERSION() view returns(uint64)
 func (_Bridge *BridgeCaller) VERSION(opts *bind.CallOpts) (uint64, error) {
-	var (
-		ret0 = new(uint64)
-	)
-	out := ret0
-	err := _Bridge.contract.Call(opts, out, "VERSION")
-	return *ret0, err
+	var out []interface{}
+	err := _Bridge.contract.Call(opts, &out, "VERSION")
+	if err != nil {
+		return *new(uint64), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint64)).(*uint64)
+
+	return out0, err
 }
 
 // VERSION is a free data retrieval call binding the contract method 0xffa1ad74.
@@ -469,12 +476,16 @@ func (_Bridge *BridgeCallerSession) VERSION() (uint64, error) {
 //
 // Solidity: function closedValueTransferVotes(uint64 ) view returns(bool)
 func (_Bridge *BridgeCaller) ClosedValueTransferVotes(opts *bind.CallOpts, arg0 uint64) (bool, error) {
-	var (
-		ret0 = new(bool)
-	)
-	out := ret0
-	err := _Bridge.contract.Call(opts, out, "closedValueTransferVotes", arg0)
-	return *ret0, err
+	var out []interface{}
+	err := _Bridge.contract.Call(opts, &out, "closedValueTransferVotes", arg0)
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
 }
 
 // ClosedValueTransferVotes is a free data retrieval call binding the contract method 0x9832c1d7.
@@ -495,12 +506,15 @@ func (_Bridge *BridgeCallerSession) ClosedValueTransferVotes(arg0 uint64) (bool,
 //
 // Solidity: function configurationNonce() view returns(uint64)
 func (_Bridge *BridgeCaller) ConfigurationNonce(opts *bind.CallOpts) (uint64, error) {
-	var (
-		ret0 = new(uint64)
-	)
-	out := ret0
-	err := _Bridge.contract.Call(opts, out, "configurationNonce")
-	return *ret0, err
+	var out []interface{}
+	err := _Bridge.contract.Call(opts, &out, "configurationNonce")
+	if err != nil {
+		return *new(uint64), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(uint64)).(*uint64)
+
+	return out0, err
 }
 
 // ConfigurationNonce is a free data retrieval call binding the contract method 0xac6fff0b.
@@ -521,12 +535,15 @@ func (_Bridge *BridgeCallerSession) ConfigurationNonce() (uint64, error) {
 //
 // Solidity: function counterpartBridge() view returns(address)
 func (_Bridge *BridgeCaller) CounterpartBridge(opts *bind.CallOpts) (common.Address, error) {
-	var (
-		ret0 = new(common.Address)
-	)
-	out := ret0
-	err := _Bridge.contract.Call(opts, out, "counterpartBridge")
-	return *ret0, err
+	var out []interface{}
+	err := _Bridge.contract.Call(opts, &out, "counterpartBridge")
+	if err != nil {
+		return *new(common.Address), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(common.Address)).(*common.Address)
+
+	return out0, err
 }
 
 // CounterpartBridge is a free data retrieval call binding the contract method 0x3a348533.
