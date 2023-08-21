@@ -41,6 +41,7 @@ type Config struct {
 	BlockScore  *big.Int
 	Origin      common.Address
 	Coinbase    common.Address
+	Rewardbase  common.Address
 	BlockNumber *big.Int
 	Time        *big.Int
 	GasLimit    uint64
@@ -63,7 +64,7 @@ func setDefaults(cfg *Config) {
 			LondonCompatibleBlock:    new(big.Int),
 			EthTxTypeCompatibleBlock: new(big.Int),
 			KoreCompatibleBlock:      new(big.Int),
-			MantleCompatibleBlock:    new(big.Int),
+			ShanghaiCompatibleBlock:  new(big.Int),
 		}
 	}
 
@@ -117,7 +118,7 @@ func Execute(code, input []byte, cfg *Config) ([]byte, *state.StateDB, error) {
 		rules   = cfg.ChainConfig.Rules(vmenv.BlockNumber)
 	)
 	if rules.IsKore {
-		cfg.State.PrepareAccessList(cfg.Origin, common.Address{}, &address, vm.ActivePrecompiles(rules))
+		cfg.State.PrepareAccessList(rules, cfg.Origin, common.Address{}, cfg.Coinbase, &address, vm.ActivePrecompiles(rules))
 	}
 	cfg.State.CreateSmartContractAccount(address, params.CodeFormatEVM, cfg.ChainConfig.Rules(cfg.BlockNumber))
 	// set the receiver's (the executing contract) code for execution.
@@ -151,7 +152,7 @@ func Create(input []byte, cfg *Config) ([]byte, common.Address, uint64, error) {
 		rules  = cfg.ChainConfig.Rules(vmenv.BlockNumber)
 	)
 	if rules.IsKore {
-		cfg.State.PrepareAccessList(cfg.Origin, common.Address{}, nil, vm.ActivePrecompiles(rules))
+		cfg.State.PrepareAccessList(rules, cfg.Origin, common.Address{}, cfg.Coinbase, nil, vm.ActivePrecompiles(rules))
 	}
 	// Call the code with the given configuration.
 	code, address, leftOverGas, err := vmenv.Create(
@@ -179,7 +180,7 @@ func Call(address common.Address, input []byte, cfg *Config) ([]byte, uint64, er
 		rules         = cfg.ChainConfig.Rules(vmenv.BlockNumber)
 	)
 	if rules.IsKore {
-		cfg.State.PrepareAccessList(cfg.Origin, common.Address{}, &address, vm.ActivePrecompiles(rules))
+		cfg.State.PrepareAccessList(rules, cfg.Origin, common.Address{}, cfg.Coinbase, &address, vm.ActivePrecompiles(rules))
 	}
 	// Call the code with the given configuration.
 	ret, leftOverGas, err := vmenv.Call(

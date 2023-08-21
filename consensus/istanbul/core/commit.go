@@ -78,6 +78,10 @@ func (c *core) handleCommit(msg *message, src istanbul.Validator) error {
 		return errInvalidMessage
 	}
 
+	if vrank != nil {
+		vrank.AddCommit(commit, src)
+	}
+
 	// logger.Error("receive handle commit","num", commit.View.Sequence)
 	if err := c.checkMessage(msgCommit, commit.View); err != nil {
 		// logger.Error("### istanbul/commit.go checkMessage","num",commit.View.Sequence,"err",err)

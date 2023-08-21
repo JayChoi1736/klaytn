@@ -119,6 +119,7 @@ func (bc *BlockChain) migrateState(rootHash common.Hash) (returnErr error) {
 	}
 
 	stateTrieBatch := dstState.TrieDB().DiskDB().NewBatch(database.StateTrieDB)
+	defer stateTrieBatch.Release()
 	stats := migrationStats{initialStartTime: start, startTime: mclock.Now()}
 
 	if bc.testMigrationHook != nil {
@@ -306,6 +307,10 @@ func (bc *BlockChain) restartStateMigration() {
 
 // PrepareStateMigration sets prepareStateMigration to be called in checkStartStateMigration.
 func (bc *BlockChain) PrepareStateMigration() error {
+	if bc.db.ReadPruningEnabled() {
+		return errors.New("state migration not supported with live pruning enabled")
+	}
+
 	if bc.db.InMigration() || bc.prepareStateMigration {
 		return errors.New("migration already started")
 	}

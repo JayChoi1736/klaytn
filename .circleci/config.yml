@@ -22,17 +22,35 @@ executors:
   test-executor:
     working_directory: /go/src/github.com/klaytn/klaytn
     docker:
-      - image: klaytn/build_base:1.2-go.1.18-solc0.8.13
+      - image: klaytn/build_base:1.2-ubuntu18.04-go.1.20.6-solc0.8.13
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
   test-others-executor:
     working_directory: /go/src/github.com/klaytn/klaytn
     docker:
-      - image: klaytn/build_base:1.2-go.1.18-solc0.8.13
+      - image: klaytn/build_base:1.2-ubuntu18.04-go.1.20.6-solc0.8.13
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
       - image: localstack/localstack:0.13.0
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
       - image: circleci/redis:6.0.8-alpine
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
       - name: zookeeper
         image: wurstmeister/zookeeper
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
       - name: kafka
         image: wurstmeister/kafka
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
         environment:
           KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
           KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://kafka:9094
@@ -42,11 +60,14 @@ executors:
   rpm-executor:
     working_directory: /go/src/github.com/klaytn/klaytn
     docker:
-      - image: klaytn/circleci-rpmbuild:1.18
+      - image: klaytn/circleci-rpmbuild:1.20.6
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
   default:
     working_directory: ~/go/src/github.com/klaytn/klaytn
     docker:
-      - image: cimg/go:1.18
+      - image: cimg/go:1.20.6
 
 commands:
   install-netcat:
@@ -64,29 +85,44 @@ commands:
       - run:
           name: "Install golang on machine"
           command: | 
-            curl -O https://dl.google.com/go/go1.18.<< parameters.os-network >>.tar.gz
-            mkdir $HOME/go1.18
-            tar -C $HOME/go1.18 -xzf go1.18.<< parameters.os-network >>.tar.gz
+            curl -O https://dl.google.com/go/go1.20.6.<< parameters.os-network >>.tar.gz
+            mkdir $HOME/go1.20.6
+            tar -C $HOME/go1.20.6 -xzf go1.20.6.<< parameters.os-network >>.tar.gz
+  install-awscli:
+    steps:
+      - run:
+          name: "Install awscli on macos machine"
+          command: |
+            brew install awscli
   install-golangci-lint:
     steps:
       - run:
           name: "Install golangci-lint"
           command: |
-            curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.45.2
+            curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.24.0
   pre-build:
     description: "before build, set version"
+    parameters:
+      os-network:
+        type: string
+        default: "linux-amd64"
     steps:
       - run:
           name: "set variables"
           command: |
             export GOPATH=~/go
-            export PATH=$HOME/go1.18/go/bin:$PATH
+            export PATH=$HOME/go1.20.6/go/bin:$PATH
             pat="^v[0-9]+\.[0-9]+\.[0-9]+-rc\.[0-9]+.*"
 
             if [[ $CIRCLE_TAG =~ $pat ]]; then
               echo "this is rc version $CIRCLE_TAG"
               rc_num=$(echo $CIRCLE_TAG | cut -d '-' -f 2)
-              sed -i 's/%d.%d.%d/%d.%d.%d~'$rc_num'/' params/version.go
+              if [[ << parameters.os-network >> =~ .*"darwin".* ]]; then
+                sed -i '' 's/%d.%d.%d/%d.%d.%d~'$rc_num'/' params/version.go
+              else
+                sed -i 's/%d.%d.%d/%d.%d.%d~'$rc_num'/' params/version.go
+              fi
+
               sed -n '/%d.%d.%d/p' params/version.go
             else
               echo "this is not RC version"
@@ -106,7 +142,7 @@ commands:
           name: "build and packaging"
           command: |
             export GOPATH=~/go
-            export PATH=$HOME/go1.18/go/bin:$PATH
+            export PATH=$HOME/go1.20.6/go/bin:$PATH
             make all
             for item in kcn kpn ken kscn kspn ksen kbn kgen homi; do
               ./build/package-tar.sh << parameters.baobab >> << parameters.os-network >> $item
@@ -122,7 +158,7 @@ commands:
           name: "upload S3 repo"
           command: |
             export GOPATH=~/go
-            export PATH=$HOME/go1.18/go/bin:$PATH
+            export PATH=$HOME/go1.20.6/go/bin:$PATH
             KLAYTN_VERSION=$(go run build/rpm/main.go version)
             for item in << parameters.item >>; do aws s3 cp packages/${item}-*.tar.gz s3://$FRONTEND_BUCKET/packages/klaytn/$KLAYTN_VERSION/; done
   rpm-tagging:
@@ -314,29 +350,32 @@ commands:
             cd script
             ./set_CNonly.sh
             cd ..
-            pip3 install -r requirements.txt
             cp config_template.json config.json
+            apt install python3.8 python3-venv -y
+            python3.8 -m venv --without-pip venv
+            source venv/bin/activate
+            curl https://bootstrap.pypa.io/get-pip.py | python
+            pip3 install -r requirements.txt
             python3 main.py --protocol rpc
 jobs:
   build:
-    machine:
-      image: ubuntu-2004:202201-02
+    executor: test-executor
     working_directory: ~/go/src/github.com/klaytn/klaytn
     steps:
       - checkout
+      - install-golangci-lint
       - install-golang
       - pre-build
       - run:
           name: "Build"
           command: |
-            export PATH=$HOME/go1.18/go/bin:$PATH
+            export PATH=$HOME/go1.20.6/go/bin:$PATH
             make fmt
             make all
 
   test-linter:
     executor: test-executor
     steps:
-      - install-golangci-lint
       - checkout
       - run:
           name: "Run golangci-lint"
@@ -468,8 +507,11 @@ jobs:
       - notify-success
 
   packaging-linux:
-    machine:
-      image: ubuntu-2004:202201-02
+    docker:
+      - image: klaytn/build_base:1.2-ubuntu18.04-go.1.20.6-solc0.8.13
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
     resource_class: large
     working_directory: ~/go/src/github.com/klaytn/klaytn
     steps:
@@ -480,8 +522,11 @@ jobs:
       - upload-repo
 
   packaging-linux-baobab:
-    machine:
-      image: ubuntu-2004:202201-02
+    docker:
+      - image: klaytn/build_base:1.2-ubuntu18.04-go.1.20.6-solc0.8.13
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_PASSWORD
     resource_class: large
     working_directory: ~/go/src/github.com/klaytn/klaytn
     steps:
@@ -500,9 +545,11 @@ jobs:
     working_directory: ~/go/src/github.com/klaytn/klaytn
     steps:
       - checkout
+      - install-awscli
       - install-golang:
           os-network: "darwin-amd64"
-      - pre-build
+      - pre-build:
+          os-network: "darwin-amd64"
       - build-packaging:
           os-network: "darwin-amd64"
       - upload-repo
@@ -514,9 +561,11 @@ jobs:
     working_directory: ~/go/src/github.com/klaytn/klaytn
     steps:
       - checkout
+      - install-awscli
       - install-golang:
           os-network: "darwin-amd64"
-      - pre-build
+      - pre-build:
+          os-network: "darwin-amd64"
       - build-packaging:
           os-network: "darwin-amd64"
           baobab: "-b"
