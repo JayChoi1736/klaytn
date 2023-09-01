@@ -147,7 +147,7 @@ func bindContext(address common.Address, caller bind.ContractCaller, transactor 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Context *ContextRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Context *ContextRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Context.Contract.ContextCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -166,7 +166,7 @@ func (_Context *ContextRaw) Transact(opts *bind.TransactOpts, method string, par
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Context *ContextCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Context *ContextCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Context.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -329,7 +329,7 @@ func bindGovParam(address common.Address, caller bind.ContractCaller, transactor
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_GovParam *GovParamRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_GovParam *GovParamRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _GovParam.Contract.GovParamCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -348,7 +348,7 @@ func (_GovParam *GovParamRaw) Transact(opts *bind.TransactOpts, method string, p
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_GovParam *GovParamCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_GovParam *GovParamCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _GovParam.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -370,8 +370,8 @@ func (_GovParam *GovParamCaller) Checkpoints(opts *bind.CallOpts, name string) (
 	var (
 		ret0 = new([]IGovParamParam)
 	)
-	out := ret0
-	err := _GovParam.contract.Call(opts, out, "checkpoints", name)
+	var out []interface{}
+	err := _GovParam.contract.Call(opts, &out, "checkpoints", name)
 	return *ret0, err
 }
 
@@ -426,8 +426,8 @@ func (_GovParam *GovParamCaller) GetAllParamNames(opts *bind.CallOpts) ([]string
 	var (
 		ret0 = new([]string)
 	)
-	out := ret0
-	err := _GovParam.contract.Call(opts, out, "getAllParamNames")
+	var out []interface{}
+	err := _GovParam.contract.Call(opts, &out, "getAllParamNames")
 	return *ret0, err
 }
 
@@ -572,8 +572,8 @@ func (_GovParam *GovParamCaller) Owner(opts *bind.CallOpts) (common.Address, err
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _GovParam.contract.Call(opts, out, "owner")
+	var out []interface{}
+	err := _GovParam.contract.Call(opts, &out, "owner")
 	return *ret0, err
 }
 
@@ -598,8 +598,8 @@ func (_GovParam *GovParamCaller) ParamNames(opts *bind.CallOpts, arg0 *big.Int) 
 	var (
 		ret0 = new(string)
 	)
-	out := ret0
-	err := _GovParam.contract.Call(opts, out, "paramNames", arg0)
+	var out []interface{}
+	err := _GovParam.contract.Call(opts, &out, "paramNames", arg0)
 	return *ret0, err
 }
 
@@ -1117,7 +1117,7 @@ func bindIGovParam(address common.Address, caller bind.ContractCaller, transacto
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IGovParam *IGovParamRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IGovParam *IGovParamRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IGovParam.Contract.IGovParamCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -1136,7 +1136,7 @@ func (_IGovParam *IGovParamRaw) Transact(opts *bind.TransactOpts, method string,
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IGovParam *IGovParamCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IGovParam *IGovParamCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IGovParam.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -1158,8 +1158,8 @@ func (_IGovParam *IGovParamCaller) Checkpoints(opts *bind.CallOpts, name string)
 	var (
 		ret0 = new([]IGovParamParam)
 	)
-	out := ret0
-	err := _IGovParam.contract.Call(opts, out, "checkpoints", name)
+	var out []interface{}
+	err := _IGovParam.contract.Call(opts, &out, "checkpoints", name)
 	return *ret0, err
 }
 
@@ -1214,8 +1214,8 @@ func (_IGovParam *IGovParamCaller) GetAllParamNames(opts *bind.CallOpts) ([]stri
 	var (
 		ret0 = new([]string)
 	)
-	out := ret0
-	err := _IGovParam.contract.Call(opts, out, "getAllParamNames")
+	var out []interface{}
+	err := _IGovParam.contract.Call(opts, &out, "getAllParamNames")
 	return *ret0, err
 }
 
@@ -1360,8 +1360,8 @@ func (_IGovParam *IGovParamCaller) ParamNames(opts *bind.CallOpts, idx *big.Int)
 	var (
 		ret0 = new(string)
 	)
-	out := ret0
-	err := _IGovParam.contract.Call(opts, out, "paramNames", idx)
+	var out []interface{}
+	err := _IGovParam.contract.Call(opts, &out, "paramNames", idx)
 	return *ret0, err
 }
 
@@ -1678,7 +1678,7 @@ func bindOwnable(address common.Address, caller bind.ContractCaller, transactor 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Ownable *OwnableRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Ownable *OwnableRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Ownable.Contract.OwnableCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -1697,7 +1697,7 @@ func (_Ownable *OwnableRaw) Transact(opts *bind.TransactOpts, method string, par
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Ownable *OwnableCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Ownable *OwnableCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Ownable.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -1719,8 +1719,8 @@ func (_Ownable *OwnableCaller) Owner(opts *bind.CallOpts) (common.Address, error
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _Ownable.contract.Call(opts, out, "owner")
+	var out []interface{}
+	err := _Ownable.contract.Call(opts, &out, "owner")
 	return *ret0, err
 }
 

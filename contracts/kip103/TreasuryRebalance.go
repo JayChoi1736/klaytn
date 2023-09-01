@@ -145,7 +145,7 @@ func bindIRetiredContract(address common.Address, caller bind.ContractCaller, tr
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IRetiredContract *IRetiredContractRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IRetiredContract *IRetiredContractRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IRetiredContract.Contract.IRetiredContractCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -164,7 +164,7 @@ func (_IRetiredContract *IRetiredContractRaw) Transact(opts *bind.TransactOpts, 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IRetiredContract *IRetiredContractCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IRetiredContract *IRetiredContractCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IRetiredContract.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -191,8 +191,8 @@ func (_IRetiredContract *IRetiredContractCaller) GetState(opts *bind.CallOpts) (
 		AdminList []common.Address
 		Quorom    *big.Int
 	})
-	out := ret
-	err := _IRetiredContract.contract.Call(opts, out, "getState")
+	var out []interface{}
+	err := _IRetiredContract.contract.Call(opts, &out, "getState")
 	return *ret, err
 }
 
@@ -355,7 +355,7 @@ func bindITreasuryRebalance(address common.Address, caller bind.ContractCaller, 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ITreasuryRebalance *ITreasuryRebalanceRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ITreasuryRebalance *ITreasuryRebalanceRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ITreasuryRebalance.Contract.ITreasuryRebalanceCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -374,7 +374,7 @@ func (_ITreasuryRebalance *ITreasuryRebalanceRaw) Transact(opts *bind.TransactOp
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ITreasuryRebalance *ITreasuryRebalanceCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ITreasuryRebalance *ITreasuryRebalanceCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ITreasuryRebalance.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -448,8 +448,8 @@ func (_ITreasuryRebalance *ITreasuryRebalanceCallerSession) GetNewbie(newbieAddr
 // Solidity: function getNewbieCount() view returns(uint256)
 func (_ITreasuryRebalance *ITreasuryRebalanceCaller) GetNewbieCount(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _ITreasuryRebalance.contract.Call(opts, out, "getNewbieCount")
+	var out []interface{}
+	err := _ITreasuryRebalance.contract.Call(opts, &out, "getNewbieCount")
 	return *ret0, err
 }
 
@@ -502,8 +502,8 @@ func (_ITreasuryRebalance *ITreasuryRebalanceCallerSession) GetRetired(retiredAd
 // Solidity: function getRetiredCount() view returns(uint256)
 func (_ITreasuryRebalance *ITreasuryRebalanceCaller) GetRetiredCount(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _ITreasuryRebalance.contract.Call(opts, out, "getRetiredCount")
+	var out []interface{}
+	err := _ITreasuryRebalance.contract.Call(opts, &out, "getRetiredCount")
 	return *ret0, err
 }
 
@@ -526,8 +526,8 @@ func (_ITreasuryRebalance *ITreasuryRebalanceCallerSession) GetRetiredCount() (*
 // Solidity: function getTreasuryAmount() view returns(uint256 treasuryAmount)
 func (_ITreasuryRebalance *ITreasuryRebalanceCaller) GetTreasuryAmount(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _ITreasuryRebalance.contract.Call(opts, out, "getTreasuryAmount")
+	var out []interface{}
+	err := _ITreasuryRebalance.contract.Call(opts, &out, "getTreasuryAmount")
 	return *ret0, err
 }
 
@@ -550,8 +550,8 @@ func (_ITreasuryRebalance *ITreasuryRebalanceCallerSession) GetTreasuryAmount() 
 // Solidity: function memo() view returns(string)
 func (_ITreasuryRebalance *ITreasuryRebalanceCaller) Memo(opts *bind.CallOpts) (string, error) {
 	ret0 := new(string)
-	out := ret0
-	err := _ITreasuryRebalance.contract.Call(opts, out, "memo")
+	var out []interface{}
+	err := _ITreasuryRebalance.contract.Call(opts, &out, "memo")
 	return *ret0, err
 }
 
@@ -574,8 +574,8 @@ func (_ITreasuryRebalance *ITreasuryRebalanceCallerSession) Memo() (string, erro
 // Solidity: function rebalanceBlockNumber() view returns(uint256)
 func (_ITreasuryRebalance *ITreasuryRebalanceCaller) RebalanceBlockNumber(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _ITreasuryRebalance.contract.Call(opts, out, "rebalanceBlockNumber")
+	var out []interface{}
+	err := _ITreasuryRebalance.contract.Call(opts, &out, "rebalanceBlockNumber")
 	return *ret0, err
 }
 
@@ -598,8 +598,8 @@ func (_ITreasuryRebalance *ITreasuryRebalanceCallerSession) RebalanceBlockNumber
 // Solidity: function status() view returns(uint8)
 func (_ITreasuryRebalance *ITreasuryRebalanceCaller) Status(opts *bind.CallOpts) (uint8, error) {
 	ret0 := new(uint8)
-	out := ret0
-	err := _ITreasuryRebalance.contract.Call(opts, out, "status")
+	var out []interface{}
+	err := _ITreasuryRebalance.contract.Call(opts, &out, "status")
 	return *ret0, err
 }
 
@@ -622,8 +622,8 @@ func (_ITreasuryRebalance *ITreasuryRebalanceCallerSession) Status() (uint8, err
 // Solidity: function sumOfRetiredBalance() view returns(uint256 retireesBalance)
 func (_ITreasuryRebalance *ITreasuryRebalanceCaller) SumOfRetiredBalance(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _ITreasuryRebalance.contract.Call(opts, out, "sumOfRetiredBalance")
+	var out []interface{}
+	err := _ITreasuryRebalance.contract.Call(opts, &out, "sumOfRetiredBalance")
 	return *ret0, err
 }
 
@@ -2023,7 +2023,7 @@ func bindOwnable(address common.Address, caller bind.ContractCaller, transactor 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Ownable *OwnableRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Ownable *OwnableRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Ownable.Contract.OwnableCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -2042,7 +2042,7 @@ func (_Ownable *OwnableRaw) Transact(opts *bind.TransactOpts, method string, par
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Ownable *OwnableCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Ownable *OwnableCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Ownable.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -2062,8 +2062,8 @@ func (_Ownable *OwnableTransactorRaw) Transact(opts *bind.TransactOpts, method s
 // Solidity: function isOwner() view returns(bool)
 func (_Ownable *OwnableCaller) IsOwner(opts *bind.CallOpts) (bool, error) {
 	ret0 := new(bool)
-	out := ret0
-	err := _Ownable.contract.Call(opts, out, "isOwner")
+	var out []interface{}
+	err := _Ownable.contract.Call(opts, &out, "isOwner")
 	return *ret0, err
 }
 
@@ -2086,8 +2086,8 @@ func (_Ownable *OwnableCallerSession) IsOwner() (bool, error) {
 // Solidity: function owner() view returns(address)
 func (_Ownable *OwnableCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
 	ret0 := new(common.Address)
-	out := ret0
-	err := _Ownable.contract.Call(opts, out, "owner")
+	var out []interface{}
+	err := _Ownable.contract.Call(opts, &out, "owner")
 	return *ret0, err
 }
 
@@ -2462,7 +2462,7 @@ func bindTreasuryRebalance(address common.Address, caller bind.ContractCaller, t
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_TreasuryRebalance *TreasuryRebalanceRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_TreasuryRebalance *TreasuryRebalanceRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _TreasuryRebalance.Contract.TreasuryRebalanceCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -2481,7 +2481,7 @@ func (_TreasuryRebalance *TreasuryRebalanceRaw) Transact(opts *bind.TransactOpts
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_TreasuryRebalance *TreasuryRebalanceCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_TreasuryRebalance *TreasuryRebalanceCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _TreasuryRebalance.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -2555,8 +2555,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) GetNewbie(_newbieAddre
 // Solidity: function getNewbieCount() view returns(uint256)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) GetNewbieCount(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "getNewbieCount")
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "getNewbieCount")
 	return *ret0, err
 }
 
@@ -2579,8 +2579,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) GetNewbieCount() (*big
 // Solidity: function getNewbieIndex(address _newbieAddress) view returns(uint256)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) GetNewbieIndex(opts *bind.CallOpts, _newbieAddress common.Address) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "getNewbieIndex", _newbieAddress)
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "getNewbieIndex", _newbieAddress)
 	return *ret0, err
 }
 
@@ -2633,8 +2633,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) GetRetired(_retiredAdd
 // Solidity: function getRetiredCount() view returns(uint256)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) GetRetiredCount(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "getRetiredCount")
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "getRetiredCount")
 	return *ret0, err
 }
 
@@ -2657,8 +2657,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) GetRetiredCount() (*bi
 // Solidity: function getRetiredIndex(address _retiredAddress) view returns(uint256)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) GetRetiredIndex(opts *bind.CallOpts, _retiredAddress common.Address) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "getRetiredIndex", _retiredAddress)
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "getRetiredIndex", _retiredAddress)
 	return *ret0, err
 }
 
@@ -2681,8 +2681,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) GetRetiredIndex(_retir
 // Solidity: function getTreasuryAmount() view returns(uint256 treasuryAmount)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) GetTreasuryAmount(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "getTreasuryAmount")
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "getTreasuryAmount")
 	return *ret0, err
 }
 
@@ -2705,8 +2705,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) GetTreasuryAmount() (*
 // Solidity: function isContractAddr(address _addr) view returns(bool)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) IsContractAddr(opts *bind.CallOpts, _addr common.Address) (bool, error) {
 	ret0 := new(bool)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "isContractAddr", _addr)
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "isContractAddr", _addr)
 	return *ret0, err
 }
 
@@ -2729,8 +2729,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) IsContractAddr(_addr c
 // Solidity: function isOwner() view returns(bool)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) IsOwner(opts *bind.CallOpts) (bool, error) {
 	ret0 := new(bool)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "isOwner")
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "isOwner")
 	return *ret0, err
 }
 
@@ -2753,8 +2753,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) IsOwner() (bool, error
 // Solidity: function memo() view returns(string)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) Memo(opts *bind.CallOpts) (string, error) {
 	ret0 := new(string)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "memo")
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "memo")
 	return *ret0, err
 }
 
@@ -2777,8 +2777,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) Memo() (string, error)
 // Solidity: function newbieExists(address _newbieAddress) view returns(bool)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) NewbieExists(opts *bind.CallOpts, _newbieAddress common.Address) (bool, error) {
 	ret0 := new(bool)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "newbieExists", _newbieAddress)
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "newbieExists", _newbieAddress)
 	return *ret0, err
 }
 
@@ -2808,8 +2808,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCaller) Newbies(opts *bind.CallOpts, 
 		Newbie common.Address
 		Amount *big.Int
 	})
-	out := ret
-	err := _TreasuryRebalance.contract.Call(opts, out, "newbies", arg0)
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "newbies", arg0)
 	return *ret, err
 }
 
@@ -2840,8 +2840,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) Newbies(arg0 *big.Int)
 // Solidity: function owner() view returns(address)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) Owner(opts *bind.CallOpts) (common.Address, error) {
 	ret0 := new(common.Address)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "owner")
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "owner")
 	return *ret0, err
 }
 
@@ -2864,8 +2864,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) Owner() (common.Addres
 // Solidity: function rebalanceBlockNumber() view returns(uint256)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) RebalanceBlockNumber(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "rebalanceBlockNumber")
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "rebalanceBlockNumber")
 	return *ret0, err
 }
 
@@ -2888,8 +2888,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) RebalanceBlockNumber()
 // Solidity: function retiredExists(address _retiredAddress) view returns(bool)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) RetiredExists(opts *bind.CallOpts, _retiredAddress common.Address) (bool, error) {
 	ret0 := new(bool)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "retiredExists", _retiredAddress)
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "retiredExists", _retiredAddress)
 	return *ret0, err
 }
 
@@ -2912,8 +2912,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) RetiredExists(_retired
 // Solidity: function retirees(uint256 ) view returns(address retired)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) Retirees(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
 	ret0 := new(common.Address)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "retirees", arg0)
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "retirees", arg0)
 	return *ret0, err
 }
 
@@ -2936,8 +2936,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) Retirees(arg0 *big.Int
 // Solidity: function status() view returns(uint8)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) Status(opts *bind.CallOpts) (uint8, error) {
 	ret0 := new(uint8)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "status")
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "status")
 	return *ret0, err
 }
 
@@ -2960,8 +2960,8 @@ func (_TreasuryRebalance *TreasuryRebalanceCallerSession) Status() (uint8, error
 // Solidity: function sumOfRetiredBalance() view returns(uint256 retireesBalance)
 func (_TreasuryRebalance *TreasuryRebalanceCaller) SumOfRetiredBalance(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _TreasuryRebalance.contract.Call(opts, out, "sumOfRetiredBalance")
+	var out []interface{}
+	err := _TreasuryRebalance.contract.Call(opts, &out, "sumOfRetiredBalance")
 	return *ret0, err
 }
 

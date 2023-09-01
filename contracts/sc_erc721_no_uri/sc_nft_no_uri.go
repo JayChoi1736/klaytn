@@ -157,7 +157,7 @@ func bindAddress(address common.Address, caller bind.ContractCaller, transactor 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Address *AddressRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Address *AddressRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Address.Contract.AddressCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -176,7 +176,7 @@ func (_Address *AddressRaw) Transact(opts *bind.TransactOpts, method string, par
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Address *AddressCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Address *AddressCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Address.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -322,7 +322,7 @@ func bindCounters(address common.Address, caller bind.ContractCaller, transactor
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Counters *CountersRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Counters *CountersRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Counters.Contract.CountersCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -341,7 +341,7 @@ func (_Counters *CountersRaw) Transact(opts *bind.TransactOpts, method string, p
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Counters *CountersCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Counters *CountersCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Counters.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -475,7 +475,7 @@ func bindERC165(address common.Address, caller bind.ContractCaller, transactor b
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ERC165 *ERC165Raw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ERC165 *ERC165Raw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ERC165.Contract.ERC165Caller.contract.Call(opts, result, method, params...)
 }
 
@@ -494,7 +494,7 @@ func (_ERC165 *ERC165Raw) Transact(opts *bind.TransactOpts, method string, param
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ERC165 *ERC165CallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ERC165 *ERC165CallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ERC165.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -516,8 +516,8 @@ func (_ERC165 *ERC165Caller) SupportsInterface(opts *bind.CallOpts, interfaceId 
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ERC165.contract.Call(opts, out, "supportsInterface", interfaceId)
+	var out []interface{}
+	err := _ERC165.contract.Call(opts, &out, "supportsInterface", interfaceId)
 	return *ret0, err
 }
 
@@ -680,7 +680,7 @@ func bindERC721(address common.Address, caller bind.ContractCaller, transactor b
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ERC721 *ERC721Raw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ERC721 *ERC721Raw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ERC721.Contract.ERC721Caller.contract.Call(opts, result, method, params...)
 }
 
@@ -699,7 +699,7 @@ func (_ERC721 *ERC721Raw) Transact(opts *bind.TransactOpts, method string, param
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ERC721 *ERC721CallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ERC721 *ERC721CallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ERC721.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -721,8 +721,8 @@ func (_ERC721 *ERC721Caller) BalanceOf(opts *bind.CallOpts, owner common.Address
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _ERC721.contract.Call(opts, out, "balanceOf", owner)
+	var out []interface{}
+	err := _ERC721.contract.Call(opts, &out, "balanceOf", owner)
 	return *ret0, err
 }
 
@@ -747,8 +747,8 @@ func (_ERC721 *ERC721Caller) GetApproved(opts *bind.CallOpts, tokenId *big.Int) 
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ERC721.contract.Call(opts, out, "getApproved", tokenId)
+	var out []interface{}
+	err := _ERC721.contract.Call(opts, &out, "getApproved", tokenId)
 	return *ret0, err
 }
 
@@ -773,8 +773,8 @@ func (_ERC721 *ERC721Caller) IsApprovedForAll(opts *bind.CallOpts, owner common.
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ERC721.contract.Call(opts, out, "isApprovedForAll", owner, operator)
+	var out []interface{}
+	err := _ERC721.contract.Call(opts, &out, "isApprovedForAll", owner, operator)
 	return *ret0, err
 }
 
@@ -799,8 +799,8 @@ func (_ERC721 *ERC721Caller) OwnerOf(opts *bind.CallOpts, tokenId *big.Int) (com
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ERC721.contract.Call(opts, out, "ownerOf", tokenId)
+	var out []interface{}
+	err := _ERC721.contract.Call(opts, &out, "ownerOf", tokenId)
 	return *ret0, err
 }
 
@@ -825,8 +825,8 @@ func (_ERC721 *ERC721Caller) SupportsInterface(opts *bind.CallOpts, interfaceId 
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ERC721.contract.Call(opts, out, "supportsInterface", interfaceId)
+	var out []interface{}
+	err := _ERC721.contract.Call(opts, &out, "supportsInterface", interfaceId)
 	return *ret0, err
 }
 
@@ -1570,7 +1570,7 @@ func bindERC721Burnable(address common.Address, caller bind.ContractCaller, tran
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ERC721Burnable *ERC721BurnableRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ERC721Burnable *ERC721BurnableRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ERC721Burnable.Contract.ERC721BurnableCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -1589,7 +1589,7 @@ func (_ERC721Burnable *ERC721BurnableRaw) Transact(opts *bind.TransactOpts, meth
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ERC721Burnable *ERC721BurnableCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ERC721Burnable *ERC721BurnableCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ERC721Burnable.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -1611,8 +1611,8 @@ func (_ERC721Burnable *ERC721BurnableCaller) BalanceOf(opts *bind.CallOpts, owne
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _ERC721Burnable.contract.Call(opts, out, "balanceOf", owner)
+	var out []interface{}
+	err := _ERC721Burnable.contract.Call(opts, &out, "balanceOf", owner)
 	return *ret0, err
 }
 
@@ -1637,8 +1637,8 @@ func (_ERC721Burnable *ERC721BurnableCaller) GetApproved(opts *bind.CallOpts, to
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ERC721Burnable.contract.Call(opts, out, "getApproved", tokenId)
+	var out []interface{}
+	err := _ERC721Burnable.contract.Call(opts, &out, "getApproved", tokenId)
 	return *ret0, err
 }
 
@@ -1663,8 +1663,8 @@ func (_ERC721Burnable *ERC721BurnableCaller) IsApprovedForAll(opts *bind.CallOpt
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ERC721Burnable.contract.Call(opts, out, "isApprovedForAll", owner, operator)
+	var out []interface{}
+	err := _ERC721Burnable.contract.Call(opts, &out, "isApprovedForAll", owner, operator)
 	return *ret0, err
 }
 
@@ -1689,8 +1689,8 @@ func (_ERC721Burnable *ERC721BurnableCaller) OwnerOf(opts *bind.CallOpts, tokenI
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ERC721Burnable.contract.Call(opts, out, "ownerOf", tokenId)
+	var out []interface{}
+	err := _ERC721Burnable.contract.Call(opts, &out, "ownerOf", tokenId)
 	return *ret0, err
 }
 
@@ -1715,8 +1715,8 @@ func (_ERC721Burnable *ERC721BurnableCaller) SupportsInterface(opts *bind.CallOp
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ERC721Burnable.contract.Call(opts, out, "supportsInterface", interfaceId)
+	var out []interface{}
+	err := _ERC721Burnable.contract.Call(opts, &out, "supportsInterface", interfaceId)
 	return *ret0, err
 }
 
@@ -2484,7 +2484,7 @@ func bindERC721Mintable(address common.Address, caller bind.ContractCaller, tran
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ERC721Mintable *ERC721MintableRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ERC721Mintable *ERC721MintableRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ERC721Mintable.Contract.ERC721MintableCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -2503,7 +2503,7 @@ func (_ERC721Mintable *ERC721MintableRaw) Transact(opts *bind.TransactOpts, meth
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ERC721Mintable *ERC721MintableCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ERC721Mintable *ERC721MintableCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ERC721Mintable.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -2525,8 +2525,8 @@ func (_ERC721Mintable *ERC721MintableCaller) BalanceOf(opts *bind.CallOpts, owne
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _ERC721Mintable.contract.Call(opts, out, "balanceOf", owner)
+	var out []interface{}
+	err := _ERC721Mintable.contract.Call(opts, &out, "balanceOf", owner)
 	return *ret0, err
 }
 
@@ -2551,8 +2551,8 @@ func (_ERC721Mintable *ERC721MintableCaller) GetApproved(opts *bind.CallOpts, to
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ERC721Mintable.contract.Call(opts, out, "getApproved", tokenId)
+	var out []interface{}
+	err := _ERC721Mintable.contract.Call(opts, &out, "getApproved", tokenId)
 	return *ret0, err
 }
 
@@ -2577,8 +2577,8 @@ func (_ERC721Mintable *ERC721MintableCaller) IsApprovedForAll(opts *bind.CallOpt
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ERC721Mintable.contract.Call(opts, out, "isApprovedForAll", owner, operator)
+	var out []interface{}
+	err := _ERC721Mintable.contract.Call(opts, &out, "isApprovedForAll", owner, operator)
 	return *ret0, err
 }
 
@@ -2603,8 +2603,8 @@ func (_ERC721Mintable *ERC721MintableCaller) IsMinter(opts *bind.CallOpts, accou
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ERC721Mintable.contract.Call(opts, out, "isMinter", account)
+	var out []interface{}
+	err := _ERC721Mintable.contract.Call(opts, &out, "isMinter", account)
 	return *ret0, err
 }
 
@@ -2629,8 +2629,8 @@ func (_ERC721Mintable *ERC721MintableCaller) OwnerOf(opts *bind.CallOpts, tokenI
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ERC721Mintable.contract.Call(opts, out, "ownerOf", tokenId)
+	var out []interface{}
+	err := _ERC721Mintable.contract.Call(opts, &out, "ownerOf", tokenId)
 	return *ret0, err
 }
 
@@ -2655,8 +2655,8 @@ func (_ERC721Mintable *ERC721MintableCaller) SupportsInterface(opts *bind.CallOp
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ERC721Mintable.contract.Call(opts, out, "supportsInterface", interfaceId)
+	var out []interface{}
+	err := _ERC721Mintable.contract.Call(opts, &out, "supportsInterface", interfaceId)
 	return *ret0, err
 }
 
@@ -3738,7 +3738,7 @@ func bindERC721ServiceChain(address common.Address, caller bind.ContractCaller, 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ERC721ServiceChain *ERC721ServiceChainRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ERC721ServiceChain *ERC721ServiceChainRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ERC721ServiceChain.Contract.ERC721ServiceChainCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -3757,7 +3757,7 @@ func (_ERC721ServiceChain *ERC721ServiceChainRaw) Transact(opts *bind.TransactOp
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ERC721ServiceChain *ERC721ServiceChainCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ERC721ServiceChain *ERC721ServiceChainCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ERC721ServiceChain.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -3779,8 +3779,8 @@ func (_ERC721ServiceChain *ERC721ServiceChainCaller) BalanceOf(opts *bind.CallOp
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _ERC721ServiceChain.contract.Call(opts, out, "balanceOf", owner)
+	var out []interface{}
+	err := _ERC721ServiceChain.contract.Call(opts, &out, "balanceOf", owner)
 	return *ret0, err
 }
 
@@ -3805,8 +3805,8 @@ func (_ERC721ServiceChain *ERC721ServiceChainCaller) Bridge(opts *bind.CallOpts)
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ERC721ServiceChain.contract.Call(opts, out, "bridge")
+	var out []interface{}
+	err := _ERC721ServiceChain.contract.Call(opts, &out, "bridge")
 	return *ret0, err
 }
 
@@ -3831,8 +3831,8 @@ func (_ERC721ServiceChain *ERC721ServiceChainCaller) GetApproved(opts *bind.Call
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ERC721ServiceChain.contract.Call(opts, out, "getApproved", tokenId)
+	var out []interface{}
+	err := _ERC721ServiceChain.contract.Call(opts, &out, "getApproved", tokenId)
 	return *ret0, err
 }
 
@@ -3857,8 +3857,8 @@ func (_ERC721ServiceChain *ERC721ServiceChainCaller) IsApprovedForAll(opts *bind
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ERC721ServiceChain.contract.Call(opts, out, "isApprovedForAll", owner, operator)
+	var out []interface{}
+	err := _ERC721ServiceChain.contract.Call(opts, &out, "isApprovedForAll", owner, operator)
 	return *ret0, err
 }
 
@@ -3883,8 +3883,8 @@ func (_ERC721ServiceChain *ERC721ServiceChainCaller) IsOwner(opts *bind.CallOpts
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ERC721ServiceChain.contract.Call(opts, out, "isOwner")
+	var out []interface{}
+	err := _ERC721ServiceChain.contract.Call(opts, &out, "isOwner")
 	return *ret0, err
 }
 
@@ -3909,8 +3909,8 @@ func (_ERC721ServiceChain *ERC721ServiceChainCaller) Owner(opts *bind.CallOpts) 
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ERC721ServiceChain.contract.Call(opts, out, "owner")
+	var out []interface{}
+	err := _ERC721ServiceChain.contract.Call(opts, &out, "owner")
 	return *ret0, err
 }
 
@@ -3935,8 +3935,8 @@ func (_ERC721ServiceChain *ERC721ServiceChainCaller) OwnerOf(opts *bind.CallOpts
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ERC721ServiceChain.contract.Call(opts, out, "ownerOf", tokenId)
+	var out []interface{}
+	err := _ERC721ServiceChain.contract.Call(opts, &out, "ownerOf", tokenId)
 	return *ret0, err
 }
 
@@ -3961,8 +3961,8 @@ func (_ERC721ServiceChain *ERC721ServiceChainCaller) SupportsInterface(opts *bin
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ERC721ServiceChain.contract.Call(opts, out, "supportsInterface", interfaceId)
+	var out []interface{}
+	err := _ERC721ServiceChain.contract.Call(opts, &out, "supportsInterface", interfaceId)
 	return *ret0, err
 }
 
@@ -4915,7 +4915,7 @@ func bindIERC165(address common.Address, caller bind.ContractCaller, transactor 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IERC165 *IERC165Raw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IERC165 *IERC165Raw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IERC165.Contract.IERC165Caller.contract.Call(opts, result, method, params...)
 }
 
@@ -4934,7 +4934,7 @@ func (_IERC165 *IERC165Raw) Transact(opts *bind.TransactOpts, method string, par
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IERC165 *IERC165CallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IERC165 *IERC165CallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IERC165.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -4956,8 +4956,8 @@ func (_IERC165 *IERC165Caller) SupportsInterface(opts *bind.CallOpts, interfaceI
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _IERC165.contract.Call(opts, out, "supportsInterface", interfaceId)
+	var out []interface{}
+	err := _IERC165.contract.Call(opts, &out, "supportsInterface", interfaceId)
 	return *ret0, err
 }
 
@@ -5103,7 +5103,7 @@ func bindIERC721(address common.Address, caller bind.ContractCaller, transactor 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IERC721 *IERC721Raw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IERC721 *IERC721Raw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IERC721.Contract.IERC721Caller.contract.Call(opts, result, method, params...)
 }
 
@@ -5122,7 +5122,7 @@ func (_IERC721 *IERC721Raw) Transact(opts *bind.TransactOpts, method string, par
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IERC721 *IERC721CallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IERC721 *IERC721CallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IERC721.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -5144,8 +5144,8 @@ func (_IERC721 *IERC721Caller) BalanceOf(opts *bind.CallOpts, owner common.Addre
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _IERC721.contract.Call(opts, out, "balanceOf", owner)
+	var out []interface{}
+	err := _IERC721.contract.Call(opts, &out, "balanceOf", owner)
 	return *ret0, err
 }
 
@@ -5170,8 +5170,8 @@ func (_IERC721 *IERC721Caller) GetApproved(opts *bind.CallOpts, tokenId *big.Int
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _IERC721.contract.Call(opts, out, "getApproved", tokenId)
+	var out []interface{}
+	err := _IERC721.contract.Call(opts, &out, "getApproved", tokenId)
 	return *ret0, err
 }
 
@@ -5196,8 +5196,8 @@ func (_IERC721 *IERC721Caller) IsApprovedForAll(opts *bind.CallOpts, owner commo
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _IERC721.contract.Call(opts, out, "isApprovedForAll", owner, operator)
+	var out []interface{}
+	err := _IERC721.contract.Call(opts, &out, "isApprovedForAll", owner, operator)
 	return *ret0, err
 }
 
@@ -5222,8 +5222,8 @@ func (_IERC721 *IERC721Caller) OwnerOf(opts *bind.CallOpts, tokenId *big.Int) (c
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _IERC721.contract.Call(opts, out, "ownerOf", tokenId)
+	var out []interface{}
+	err := _IERC721.contract.Call(opts, &out, "ownerOf", tokenId)
 	return *ret0, err
 }
 
@@ -5248,8 +5248,8 @@ func (_IERC721 *IERC721Caller) SupportsInterface(opts *bind.CallOpts, interfaceI
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _IERC721.contract.Call(opts, out, "supportsInterface", interfaceId)
+	var out []interface{}
+	err := _IERC721.contract.Call(opts, &out, "supportsInterface", interfaceId)
 	return *ret0, err
 }
 
@@ -5966,7 +5966,7 @@ func bindIERC721BridgeReceiver(address common.Address, caller bind.ContractCalle
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IERC721BridgeReceiver *IERC721BridgeReceiverRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IERC721BridgeReceiver *IERC721BridgeReceiverRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IERC721BridgeReceiver.Contract.IERC721BridgeReceiverCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -5985,7 +5985,7 @@ func (_IERC721BridgeReceiver *IERC721BridgeReceiverRaw) Transact(opts *bind.Tran
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IERC721BridgeReceiver *IERC721BridgeReceiverCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IERC721BridgeReceiver *IERC721BridgeReceiverCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IERC721BridgeReceiver.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -6140,7 +6140,7 @@ func bindIERC721Receiver(address common.Address, caller bind.ContractCaller, tra
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IERC721Receiver *IERC721ReceiverRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IERC721Receiver *IERC721ReceiverRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IERC721Receiver.Contract.IERC721ReceiverCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -6159,7 +6159,7 @@ func (_IERC721Receiver *IERC721ReceiverRaw) Transact(opts *bind.TransactOpts, me
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_IERC721Receiver *IERC721ReceiverCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_IERC721Receiver *IERC721ReceiverCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _IERC721Receiver.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -6316,7 +6316,7 @@ func bindMinterRole(address common.Address, caller bind.ContractCaller, transact
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_MinterRole *MinterRoleRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_MinterRole *MinterRoleRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _MinterRole.Contract.MinterRoleCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -6335,7 +6335,7 @@ func (_MinterRole *MinterRoleRaw) Transact(opts *bind.TransactOpts, method strin
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_MinterRole *MinterRoleCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_MinterRole *MinterRoleCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _MinterRole.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -6357,8 +6357,8 @@ func (_MinterRole *MinterRoleCaller) IsMinter(opts *bind.CallOpts, account commo
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _MinterRole.contract.Call(opts, out, "isMinter", account)
+	var out []interface{}
+	err := _MinterRole.contract.Call(opts, &out, "isMinter", account)
 	return *ret0, err
 }
 
@@ -6826,7 +6826,7 @@ func bindOwnable(address common.Address, caller bind.ContractCaller, transactor 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Ownable *OwnableRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Ownable *OwnableRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Ownable.Contract.OwnableCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -6845,7 +6845,7 @@ func (_Ownable *OwnableRaw) Transact(opts *bind.TransactOpts, method string, par
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Ownable *OwnableCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Ownable *OwnableCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Ownable.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -6867,8 +6867,8 @@ func (_Ownable *OwnableCaller) IsOwner(opts *bind.CallOpts) (bool, error) {
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _Ownable.contract.Call(opts, out, "isOwner")
+	var out []interface{}
+	err := _Ownable.contract.Call(opts, &out, "isOwner")
 	return *ret0, err
 }
 
@@ -6893,8 +6893,8 @@ func (_Ownable *OwnableCaller) Owner(opts *bind.CallOpts) (common.Address, error
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _Ownable.contract.Call(opts, out, "owner")
+	var out []interface{}
+	err := _Ownable.contract.Call(opts, &out, "owner")
 	return *ret0, err
 }
 
@@ -7237,7 +7237,7 @@ func bindRoles(address common.Address, caller bind.ContractCaller, transactor bi
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Roles *RolesRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Roles *RolesRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Roles.Contract.RolesCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -7256,7 +7256,7 @@ func (_Roles *RolesRaw) Transact(opts *bind.TransactOpts, method string, params 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_Roles *RolesCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_Roles *RolesCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _Roles.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -7402,7 +7402,7 @@ func bindSafeMath(address common.Address, caller bind.ContractCaller, transactor
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_SafeMath *SafeMathRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_SafeMath *SafeMathRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _SafeMath.Contract.SafeMathCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -7421,7 +7421,7 @@ func (_SafeMath *SafeMathRaw) Transact(opts *bind.TransactOpts, method string, p
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_SafeMath *SafeMathCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_SafeMath *SafeMathCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _SafeMath.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -7594,7 +7594,7 @@ func bindServiceChainNFTNoURI(address common.Address, caller bind.ContractCaller
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ServiceChainNFTNoURI *ServiceChainNFTNoURIRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ServiceChainNFTNoURI *ServiceChainNFTNoURIRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ServiceChainNFTNoURI.Contract.ServiceChainNFTNoURICaller.contract.Call(opts, result, method, params...)
 }
 
@@ -7613,7 +7613,7 @@ func (_ServiceChainNFTNoURI *ServiceChainNFTNoURIRaw) Transact(opts *bind.Transa
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_ServiceChainNFTNoURI *ServiceChainNFTNoURICallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_ServiceChainNFTNoURI *ServiceChainNFTNoURICallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _ServiceChainNFTNoURI.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -7635,8 +7635,8 @@ func (_ServiceChainNFTNoURI *ServiceChainNFTNoURICaller) BalanceOf(opts *bind.Ca
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _ServiceChainNFTNoURI.contract.Call(opts, out, "balanceOf", owner)
+	var out []interface{}
+	err := _ServiceChainNFTNoURI.contract.Call(opts, &out, "balanceOf", owner)
 	return *ret0, err
 }
 
@@ -7661,8 +7661,8 @@ func (_ServiceChainNFTNoURI *ServiceChainNFTNoURICaller) Bridge(opts *bind.CallO
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ServiceChainNFTNoURI.contract.Call(opts, out, "bridge")
+	var out []interface{}
+	err := _ServiceChainNFTNoURI.contract.Call(opts, &out, "bridge")
 	return *ret0, err
 }
 
@@ -7687,8 +7687,8 @@ func (_ServiceChainNFTNoURI *ServiceChainNFTNoURICaller) GetApproved(opts *bind.
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ServiceChainNFTNoURI.contract.Call(opts, out, "getApproved", tokenId)
+	var out []interface{}
+	err := _ServiceChainNFTNoURI.contract.Call(opts, &out, "getApproved", tokenId)
 	return *ret0, err
 }
 
@@ -7713,8 +7713,8 @@ func (_ServiceChainNFTNoURI *ServiceChainNFTNoURICaller) IsApprovedForAll(opts *
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ServiceChainNFTNoURI.contract.Call(opts, out, "isApprovedForAll", owner, operator)
+	var out []interface{}
+	err := _ServiceChainNFTNoURI.contract.Call(opts, &out, "isApprovedForAll", owner, operator)
 	return *ret0, err
 }
 
@@ -7739,8 +7739,8 @@ func (_ServiceChainNFTNoURI *ServiceChainNFTNoURICaller) IsMinter(opts *bind.Cal
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ServiceChainNFTNoURI.contract.Call(opts, out, "isMinter", account)
+	var out []interface{}
+	err := _ServiceChainNFTNoURI.contract.Call(opts, &out, "isMinter", account)
 	return *ret0, err
 }
 
@@ -7765,8 +7765,8 @@ func (_ServiceChainNFTNoURI *ServiceChainNFTNoURICaller) IsOwner(opts *bind.Call
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ServiceChainNFTNoURI.contract.Call(opts, out, "isOwner")
+	var out []interface{}
+	err := _ServiceChainNFTNoURI.contract.Call(opts, &out, "isOwner")
 	return *ret0, err
 }
 
@@ -7791,8 +7791,8 @@ func (_ServiceChainNFTNoURI *ServiceChainNFTNoURICaller) Owner(opts *bind.CallOp
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ServiceChainNFTNoURI.contract.Call(opts, out, "owner")
+	var out []interface{}
+	err := _ServiceChainNFTNoURI.contract.Call(opts, &out, "owner")
 	return *ret0, err
 }
 
@@ -7817,8 +7817,8 @@ func (_ServiceChainNFTNoURI *ServiceChainNFTNoURICaller) OwnerOf(opts *bind.Call
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _ServiceChainNFTNoURI.contract.Call(opts, out, "ownerOf", tokenId)
+	var out []interface{}
+	err := _ServiceChainNFTNoURI.contract.Call(opts, &out, "ownerOf", tokenId)
 	return *ret0, err
 }
 
@@ -7843,8 +7843,8 @@ func (_ServiceChainNFTNoURI *ServiceChainNFTNoURICaller) SupportsInterface(opts 
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _ServiceChainNFTNoURI.contract.Call(opts, out, "supportsInterface", interfaceId)
+	var out []interface{}
+	err := _ServiceChainNFTNoURI.contract.Call(opts, &out, "supportsInterface", interfaceId)
 	return *ret0, err
 }
 

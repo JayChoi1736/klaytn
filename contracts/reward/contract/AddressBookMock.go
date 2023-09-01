@@ -208,7 +208,7 @@ func bindAddressBookMock(address common.Address, caller bind.ContractCaller, tra
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_AddressBookMock *AddressBookMockRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_AddressBookMock *AddressBookMockRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _AddressBookMock.Contract.AddressBookMockCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -227,7 +227,7 @@ func (_AddressBookMock *AddressBookMockRaw) Transact(opts *bind.TransactOpts, me
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_AddressBookMock *AddressBookMockCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_AddressBookMock *AddressBookMockCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _AddressBookMock.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -247,8 +247,8 @@ func (_AddressBookMock *AddressBookMockTransactorRaw) Transact(opts *bind.Transa
 // Solidity: function CN_NODE_ID_TYPE() view returns(uint8)
 func (_AddressBookMock *AddressBookMockCaller) CNNODEIDTYPE(opts *bind.CallOpts) (uint8, error) {
 	ret0 := new(uint8)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "CN_NODE_ID_TYPE")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "CN_NODE_ID_TYPE")
 	return *ret0, err
 }
 
@@ -271,8 +271,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) CNNODEIDTYPE() (uint8, err
 // Solidity: function CN_REWARD_ADDRESS_TYPE() view returns(uint8)
 func (_AddressBookMock *AddressBookMockCaller) CNREWARDADDRESSTYPE(opts *bind.CallOpts) (uint8, error) {
 	ret0 := new(uint8)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "CN_REWARD_ADDRESS_TYPE")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "CN_REWARD_ADDRESS_TYPE")
 	return *ret0, err
 }
 
@@ -295,8 +295,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) CNREWARDADDRESSTYPE() (uin
 // Solidity: function CN_STAKING_ADDRESS_TYPE() view returns(uint8)
 func (_AddressBookMock *AddressBookMockCaller) CNSTAKINGADDRESSTYPE(opts *bind.CallOpts) (uint8, error) {
 	ret0 := new(uint8)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "CN_STAKING_ADDRESS_TYPE")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "CN_STAKING_ADDRESS_TYPE")
 	return *ret0, err
 }
 
@@ -319,8 +319,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) CNSTAKINGADDRESSTYPE() (ui
 // Solidity: function CONTRACT_TYPE() view returns(string)
 func (_AddressBookMock *AddressBookMockCaller) CONTRACTTYPE(opts *bind.CallOpts) (string, error) {
 	ret0 := new(string)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "CONTRACT_TYPE")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "CONTRACT_TYPE")
 	return *ret0, err
 }
 
@@ -343,8 +343,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) CONTRACTTYPE() (string, er
 // Solidity: function KIR_CONTRACT_TYPE() view returns(uint8)
 func (_AddressBookMock *AddressBookMockCaller) KIRCONTRACTTYPE(opts *bind.CallOpts) (uint8, error) {
 	ret0 := new(uint8)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "KIR_CONTRACT_TYPE")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "KIR_CONTRACT_TYPE")
 	return *ret0, err
 }
 
@@ -367,8 +367,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) KIRCONTRACTTYPE() (uint8, 
 // Solidity: function MAX_ADMIN() view returns(uint256)
 func (_AddressBookMock *AddressBookMockCaller) MAXADMIN(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "MAX_ADMIN")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "MAX_ADMIN")
 	return *ret0, err
 }
 
@@ -391,8 +391,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) MAXADMIN() (*big.Int, erro
 // Solidity: function MAX_PENDING_REQUEST() view returns(uint256)
 func (_AddressBookMock *AddressBookMockCaller) MAXPENDINGREQUEST(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "MAX_PENDING_REQUEST")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "MAX_PENDING_REQUEST")
 	return *ret0, err
 }
 
@@ -415,8 +415,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) MAXPENDINGREQUEST() (*big.
 // Solidity: function ONE_WEEK() view returns(uint256)
 func (_AddressBookMock *AddressBookMockCaller) ONEWEEK(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "ONE_WEEK")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "ONE_WEEK")
 	return *ret0, err
 }
 
@@ -439,8 +439,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) ONEWEEK() (*big.Int, error
 // Solidity: function POC_CONTRACT_TYPE() view returns(uint8)
 func (_AddressBookMock *AddressBookMockCaller) POCCONTRACTTYPE(opts *bind.CallOpts) (uint8, error) {
 	ret0 := new(uint8)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "POC_CONTRACT_TYPE")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "POC_CONTRACT_TYPE")
 	return *ret0, err
 }
 
@@ -463,8 +463,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) POCCONTRACTTYPE() (uint8, 
 // Solidity: function TWO_WEEKS() view returns(uint256)
 func (_AddressBookMock *AddressBookMockCaller) TWOWEEKS(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "TWO_WEEKS")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "TWO_WEEKS")
 	return *ret0, err
 }
 
@@ -487,8 +487,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) TWOWEEKS() (*big.Int, erro
 // Solidity: function VERSION() view returns(uint256)
 func (_AddressBookMock *AddressBookMockCaller) VERSION(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "VERSION")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "VERSION")
 	return *ret0, err
 }
 
@@ -511,8 +511,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) VERSION() (*big.Int, error
 // Solidity: function adminList(uint256 ) view returns(address)
 func (_AddressBookMock *AddressBookMockCaller) AdminList(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
 	ret0 := new(common.Address)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "adminList", arg0)
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "adminList", arg0)
 	return *ret0, err
 }
 
@@ -535,8 +535,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) AdminList(arg0 *big.Int) (
 // Solidity: function cnIndexMap(address ) view returns(uint256)
 func (_AddressBookMock *AddressBookMockCaller) CnIndexMap(opts *bind.CallOpts, arg0 common.Address) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "cnIndexMap", arg0)
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "cnIndexMap", arg0)
 	return *ret0, err
 }
 
@@ -559,8 +559,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) CnIndexMap(arg0 common.Add
 // Solidity: function cnNodeIdList(uint256 ) view returns(address)
 func (_AddressBookMock *AddressBookMockCaller) CnNodeIdList(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
 	ret0 := new(common.Address)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "cnNodeIdList", arg0)
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "cnNodeIdList", arg0)
 	return *ret0, err
 }
 
@@ -583,8 +583,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) CnNodeIdList(arg0 *big.Int
 // Solidity: function cnRewardAddressList(uint256 ) view returns(address)
 func (_AddressBookMock *AddressBookMockCaller) CnRewardAddressList(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
 	ret0 := new(common.Address)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "cnRewardAddressList", arg0)
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "cnRewardAddressList", arg0)
 	return *ret0, err
 }
 
@@ -607,8 +607,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) CnRewardAddressList(arg0 *
 // Solidity: function cnStakingContractList(uint256 ) view returns(address)
 func (_AddressBookMock *AddressBookMockCaller) CnStakingContractList(opts *bind.CallOpts, arg0 *big.Int) (common.Address, error) {
 	ret0 := new(common.Address)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "cnStakingContractList", arg0)
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "cnStakingContractList", arg0)
 	return *ret0, err
 }
 
@@ -759,8 +759,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) GetState() ([]common.Addre
 // Solidity: function isActivated() view returns(bool)
 func (_AddressBookMock *AddressBookMockCaller) IsActivated(opts *bind.CallOpts) (bool, error) {
 	ret0 := new(bool)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "isActivated")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "isActivated")
 	return *ret0, err
 }
 
@@ -783,8 +783,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) IsActivated() (bool, error
 // Solidity: function isConstructed() view returns(bool)
 func (_AddressBookMock *AddressBookMockCaller) IsConstructed(opts *bind.CallOpts) (bool, error) {
 	ret0 := new(bool)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "isConstructed")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "isConstructed")
 	return *ret0, err
 }
 
@@ -807,8 +807,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) IsConstructed() (bool, err
 // Solidity: function kirContractAddress() view returns(address)
 func (_AddressBookMock *AddressBookMockCaller) KirContractAddress(opts *bind.CallOpts) (common.Address, error) {
 	ret0 := new(common.Address)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "kirContractAddress")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "kirContractAddress")
 	return *ret0, err
 }
 
@@ -831,8 +831,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) KirContractAddress() (comm
 // Solidity: function pocContractAddress() view returns(address)
 func (_AddressBookMock *AddressBookMockCaller) PocContractAddress(opts *bind.CallOpts) (common.Address, error) {
 	ret0 := new(common.Address)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "pocContractAddress")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "pocContractAddress")
 	return *ret0, err
 }
 
@@ -855,8 +855,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) PocContractAddress() (comm
 // Solidity: function requirement() view returns(uint256)
 func (_AddressBookMock *AddressBookMockCaller) Requirement(opts *bind.CallOpts) (*big.Int, error) {
 	ret0 := new(*big.Int)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "requirement")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "requirement")
 	return *ret0, err
 }
 
@@ -879,8 +879,8 @@ func (_AddressBookMock *AddressBookMockCallerSession) Requirement() (*big.Int, e
 // Solidity: function spareContractAddress() view returns(address)
 func (_AddressBookMock *AddressBookMockCaller) SpareContractAddress(opts *bind.CallOpts) (common.Address, error) {
 	ret0 := new(common.Address)
-	out := ret0
-	err := _AddressBookMock.contract.Call(opts, out, "spareContractAddress")
+	var out []interface{}
+	err := _AddressBookMock.contract.Call(opts, &out, "spareContractAddress")
 	return *ret0, err
 }
 

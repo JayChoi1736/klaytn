@@ -143,7 +143,7 @@ func bindKlaytnReward(address common.Address, caller bind.ContractCaller, transa
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_KlaytnReward *KlaytnRewardRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_KlaytnReward *KlaytnRewardRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _KlaytnReward.Contract.KlaytnRewardCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -162,7 +162,7 @@ func (_KlaytnReward *KlaytnRewardRaw) Transact(opts *bind.TransactOpts, method s
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_KlaytnReward *KlaytnRewardCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_KlaytnReward *KlaytnRewardCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _KlaytnReward.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -184,8 +184,8 @@ func (_KlaytnReward *KlaytnRewardCaller) BalanceOf(opts *bind.CallOpts, arg0 com
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _KlaytnReward.contract.Call(opts, out, "balanceOf", arg0)
+	var out []interface{}
+	err := _KlaytnReward.contract.Call(opts, &out, "balanceOf", arg0)
 	return *ret0, err
 }
 
@@ -210,8 +210,8 @@ func (_KlaytnReward *KlaytnRewardCaller) TotalAmount(opts *bind.CallOpts) (*big.
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _KlaytnReward.contract.Call(opts, out, "totalAmount")
+	var out []interface{}
+	err := _KlaytnReward.contract.Call(opts, &out, "totalAmount")
 	return *ret0, err
 }
 

@@ -145,7 +145,7 @@ func bindAddressBook(address common.Address, caller bind.ContractCaller, transac
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_AddressBook *AddressBookRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_AddressBook *AddressBookRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _AddressBook.Contract.AddressBookCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -164,7 +164,7 @@ func (_AddressBook *AddressBookRaw) Transact(opts *bind.TransactOpts, method str
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_AddressBook *AddressBookCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_AddressBook *AddressBookCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _AddressBook.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -186,8 +186,8 @@ func (_AddressBook *AddressBookCaller) CNNODEIDTYPE(opts *bind.CallOpts) (uint8,
 	var (
 		ret0 = new(uint8)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "CN_NODE_ID_TYPE")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "CN_NODE_ID_TYPE")
 	return *ret0, err
 }
 
@@ -212,8 +212,8 @@ func (_AddressBook *AddressBookCaller) CNREWARDADDRESSTYPE(opts *bind.CallOpts) 
 	var (
 		ret0 = new(uint8)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "CN_REWARD_ADDRESS_TYPE")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "CN_REWARD_ADDRESS_TYPE")
 	return *ret0, err
 }
 
@@ -238,8 +238,8 @@ func (_AddressBook *AddressBookCaller) CNSTAKINGADDRESSTYPE(opts *bind.CallOpts)
 	var (
 		ret0 = new(uint8)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "CN_STAKING_ADDRESS_TYPE")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "CN_STAKING_ADDRESS_TYPE")
 	return *ret0, err
 }
 
@@ -264,8 +264,8 @@ func (_AddressBook *AddressBookCaller) CONTRACTTYPE(opts *bind.CallOpts) (string
 	var (
 		ret0 = new(string)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "CONTRACT_TYPE")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "CONTRACT_TYPE")
 	return *ret0, err
 }
 
@@ -290,8 +290,8 @@ func (_AddressBook *AddressBookCaller) KIRCONTRACTTYPE(opts *bind.CallOpts) (uin
 	var (
 		ret0 = new(uint8)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "KIR_CONTRACT_TYPE")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "KIR_CONTRACT_TYPE")
 	return *ret0, err
 }
 
@@ -316,8 +316,8 @@ func (_AddressBook *AddressBookCaller) MAXADMIN(opts *bind.CallOpts) (*big.Int, 
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "MAX_ADMIN")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "MAX_ADMIN")
 	return *ret0, err
 }
 
@@ -342,8 +342,8 @@ func (_AddressBook *AddressBookCaller) MAXPENDINGREQUEST(opts *bind.CallOpts) (*
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "MAX_PENDING_REQUEST")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "MAX_PENDING_REQUEST")
 	return *ret0, err
 }
 
@@ -368,8 +368,8 @@ func (_AddressBook *AddressBookCaller) ONEWEEK(opts *bind.CallOpts) (*big.Int, e
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "ONE_WEEK")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "ONE_WEEK")
 	return *ret0, err
 }
 
@@ -394,8 +394,8 @@ func (_AddressBook *AddressBookCaller) POCCONTRACTTYPE(opts *bind.CallOpts) (uin
 	var (
 		ret0 = new(uint8)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "POC_CONTRACT_TYPE")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "POC_CONTRACT_TYPE")
 	return *ret0, err
 }
 
@@ -420,8 +420,8 @@ func (_AddressBook *AddressBookCaller) TWOWEEKS(opts *bind.CallOpts) (*big.Int, 
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "TWO_WEEKS")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "TWO_WEEKS")
 	return *ret0, err
 }
 
@@ -446,8 +446,8 @@ func (_AddressBook *AddressBookCaller) VERSION(opts *bind.CallOpts) (*big.Int, e
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "VERSION")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "VERSION")
 	return *ret0, err
 }
 
@@ -570,8 +570,8 @@ func (_AddressBook *AddressBookCaller) GetPendingRequestList(opts *bind.CallOpts
 	var (
 		ret0 = new([][32]byte)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "getPendingRequestList")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "getPendingRequestList")
 	return *ret0, err
 }
 
@@ -700,8 +700,8 @@ func (_AddressBook *AddressBookCaller) IsActivated(opts *bind.CallOpts) (bool, e
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "isActivated")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "isActivated")
 	return *ret0, err
 }
 
@@ -726,8 +726,8 @@ func (_AddressBook *AddressBookCaller) IsConstructed(opts *bind.CallOpts) (bool,
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "isConstructed")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "isConstructed")
 	return *ret0, err
 }
 
@@ -752,8 +752,8 @@ func (_AddressBook *AddressBookCaller) KirContractAddress(opts *bind.CallOpts) (
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "kirContractAddress")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "kirContractAddress")
 	return *ret0, err
 }
 
@@ -778,8 +778,8 @@ func (_AddressBook *AddressBookCaller) PocContractAddress(opts *bind.CallOpts) (
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "pocContractAddress")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "pocContractAddress")
 	return *ret0, err
 }
 
@@ -804,8 +804,8 @@ func (_AddressBook *AddressBookCaller) Requirement(opts *bind.CallOpts) (*big.In
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "requirement")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "requirement")
 	return *ret0, err
 }
 
@@ -830,8 +830,8 @@ func (_AddressBook *AddressBookCaller) SpareContractAddress(opts *bind.CallOpts)
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _AddressBook.contract.Call(opts, out, "spareContractAddress")
+	var out []interface{}
+	err := _AddressBook.contract.Call(opts, &out, "spareContractAddress")
 	return *ret0, err
 }
 
@@ -3829,7 +3829,7 @@ func bindCnStakingContractInterface(address common.Address, caller bind.Contract
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_CnStakingContractInterface *CnStakingContractInterfaceRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_CnStakingContractInterface *CnStakingContractInterfaceRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _CnStakingContractInterface.Contract.CnStakingContractInterfaceCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -3848,7 +3848,7 @@ func (_CnStakingContractInterface *CnStakingContractInterfaceRaw) Transact(opts 
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_CnStakingContractInterface *CnStakingContractInterfaceCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_CnStakingContractInterface *CnStakingContractInterfaceCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _CnStakingContractInterface.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -3870,8 +3870,8 @@ func (_CnStakingContractInterface *CnStakingContractInterfaceCaller) IsInitializ
 	var (
 		ret0 = new(bool)
 	)
-	out := ret0
-	err := _CnStakingContractInterface.contract.Call(opts, out, "isInitialized")
+	var out []interface{}
+	err := _CnStakingContractInterface.contract.Call(opts, &out, "isInitialized")
 	return *ret0, err
 }
 
@@ -3896,8 +3896,8 @@ func (_CnStakingContractInterface *CnStakingContractInterfaceCaller) NodeId(opts
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _CnStakingContractInterface.contract.Call(opts, out, "nodeId")
+	var out []interface{}
+	err := _CnStakingContractInterface.contract.Call(opts, &out, "nodeId")
 	return *ret0, err
 }
 
@@ -3922,8 +3922,8 @@ func (_CnStakingContractInterface *CnStakingContractInterfaceCaller) RewardAddre
 	var (
 		ret0 = new(common.Address)
 	)
-	out := ret0
-	err := _CnStakingContractInterface.contract.Call(opts, out, "rewardAddress")
+	var out []interface{}
+	err := _CnStakingContractInterface.contract.Call(opts, &out, "rewardAddress")
 	return *ret0, err
 }
 
@@ -4071,7 +4071,7 @@ func bindKirContractInterface(address common.Address, caller bind.ContractCaller
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_KirContractInterface *KirContractInterfaceRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_KirContractInterface *KirContractInterfaceRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _KirContractInterface.Contract.KirContractInterfaceCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -4090,7 +4090,7 @@ func (_KirContractInterface *KirContractInterfaceRaw) Transact(opts *bind.Transa
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_KirContractInterface *KirContractInterfaceCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_KirContractInterface *KirContractInterfaceCallerRaw) Call(opts *bind.CallOpts, result*[]interface{}, method string, params ...interface{}) error {
 	return _KirContractInterface.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -4112,8 +4112,8 @@ func (_KirContractInterface *KirContractInterfaceCaller) GetKirVersion(opts *bin
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _KirContractInterface.contract.Call(opts, out, "getKirVersion")
+	var out []interface{}
+	err := _KirContractInterface.contract.Call(opts, &out, "getKirVersion")
 	return *ret0, err
 }
 
@@ -4261,7 +4261,7 @@ func bindPocContractInterface(address common.Address, caller bind.ContractCaller
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_PocContractInterface *PocContractInterfaceRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_PocContractInterface *PocContractInterfaceRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _PocContractInterface.Contract.PocContractInterfaceCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -4280,7 +4280,7 @@ func (_PocContractInterface *PocContractInterfaceRaw) Transact(opts *bind.Transa
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_PocContractInterface *PocContractInterfaceCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_PocContractInterface *PocContractInterfaceCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _PocContractInterface.Contract.contract.Call(opts, result, method, params...)
 }
 
@@ -4302,8 +4302,8 @@ func (_PocContractInterface *PocContractInterfaceCaller) GetPocVersion(opts *bin
 	var (
 		ret0 = new(*big.Int)
 	)
-	out := ret0
-	err := _PocContractInterface.contract.Call(opts, out, "getPocVersion")
+	var out []interface{}
+	err := _PocContractInterface.contract.Call(opts, &out, "getPocVersion")
 	return *ret0, err
 }
 
@@ -4451,7 +4451,7 @@ func bindSafeMath(address common.Address, caller bind.ContractCaller, transactor
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_SafeMath *SafeMathRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_SafeMath *SafeMathRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _SafeMath.Contract.SafeMathCaller.contract.Call(opts, result, method, params...)
 }
 
@@ -4470,7 +4470,7 @@ func (_SafeMath *SafeMathRaw) Transact(opts *bind.TransactOpts, method string, p
 // sets the output to result. The result type might be a single field for simple
 // returns, a slice of interfaces for anonymous returns and a struct for named
 // returns.
-func (_SafeMath *SafeMathCallerRaw) Call(opts *bind.CallOpts, result interface{}, method string, params ...interface{}) error {
+func (_SafeMath *SafeMathCallerRaw) Call(opts *bind.CallOpts, result *[]interface{}, method string, params ...interface{}) error {
 	return _SafeMath.Contract.contract.Call(opts, result, method, params...)
 }
 
