@@ -98,6 +98,7 @@ import (
 	"errors"
 
 	"github.com/klaytn/klaytn"
+	"github.com/klaytn/klaytn/accounts/abi"
 	"github.com/klaytn/klaytn/accounts/abi/bind"
 	"github.com/klaytn/klaytn/common"
 	"github.com/klaytn/klaytn/blockchain/types"
@@ -330,7 +331,7 @@ var (
 			{{if .Structured}}
 			outstruct := new(struct{ {{range .Normalized.Outputs}} {{.Name}} {{bindtype .Type $structs}}; {{end}} })
 			{{range $i, $t := .Normalized.Outputs}} 
-			outstruct.{{.Name}} = out[{{$i}}].({{bindtype .Type $structs}}){{end}}
+			outstruct.{{.Name}} = *abi.ConvertType(out[{{$i}}], new({{bindtype .Type $structs}})).(*{{bindtype .Type $structs}}){{end}}
 			return *outstruct, err
 			{{else}}
 			if err != nil {
@@ -565,6 +566,7 @@ var (
 			if err := _{{$contract.Type}}.contract.UnpackLog(event, "{{.Original.Name}}", log); err != nil {
 				return nil, err
 			}
+			event.Raw = log
 			return event, nil
 		}
 
