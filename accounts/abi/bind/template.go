@@ -34,7 +34,7 @@ type tmplData struct {
 type tmplContract struct {
 	Type            string                 // Type name of the main contract binding
 	InputABI        string                 // JSON ABI used as the input to generate the binding from
-	InputBin        string                 // Optional EVM bytecode used to denetare deploy code from
+	InputBin        string                 // Optional EVM bytecode used to generate deploy code from
 	FuncSigs        map[string]string      // Optional map: string signature -> 4-byte signature
 	InputBinRuntime string                 // Optional EVM-Runtime bytecode used to add genesis block
 	Constructor     abi.Method             // Contract constructor for deploy parametrization
@@ -115,6 +115,7 @@ var (
 	_ = common.Big1
 	_ = types.BloomLookup
 	_ = event.NewSubscription
+	_ = abi.ConvertType
 )
 
 {{$structs := .Structs}}
@@ -330,6 +331,9 @@ var (
 			err := _{{$contract.Type}}.contract.Call(opts, &out, "{{.Original.Name}}" {{range .Normalized.Inputs}}, {{.Name}}{{end}})
 			{{if .Structured}}
 			outstruct := new(struct{ {{range .Normalized.Outputs}} {{.Name}} {{bindtype .Type $structs}}; {{end}} })
+			if err != nil {
+				return *outstruct, err
+			}
 			{{range $i, $t := .Normalized.Outputs}} 
 			outstruct.{{.Name}} = *abi.ConvertType(out[{{$i}}], new({{bindtype .Type $structs}})).(*{{bindtype .Type $structs}}){{end}}
 			return *outstruct, err

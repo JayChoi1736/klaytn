@@ -581,6 +581,43 @@ var bindTests = []struct {
 		nil,
 		nil,
 	},
+	{
+		`NonExistentStruct`,
+		`
+			contract NonExistentStruct {
+				function Struct() public view returns(uint256 a, uint256 b) {
+					return (10, 10);
+				}
+			}
+		`,
+		[]string{`6080604052348015600f57600080fd5b5060888061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063d5f6622514602d575b600080fd5b6033604c565b6040805192835260208301919091528051918290030190f35b600a809156fea264697066735822beefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeefbeef64736f6c6343decafe0033`},
+		[]string{`[{"inputs":[],"name":"Struct","outputs":[{"internalType":"uint256","name":"a","type":"uint256"},{"internalType":"uint256","name":"b","type":"uint256"}],"stateMutability":"pure","type":"function"}]`},
+		`
+			"github.com/klaytn/klaytn/accounts/abi/bind"
+			"github.com/klaytn/klaytn/accounts/abi/bind/backends"
+			"github.com/klaytn/klaytn/blockchain"
+			"github.com/klaytn/klaytn/common"
+		`,
+		`
+			// Create a simulator and wrap a non-deployed contract
+			sim := backends.NewSimulatedBackend(blockchain.GenesisAlloc{})
+			defer sim.Close()
+			nonexistent, err := NewNonExistentStruct(common.Address{}, sim)
+			if err != nil {
+				t.Fatalf("Failed to access non-existent contract: %v", err)
+			}
+			// Ensure that contract calls fail with the appropriate error
+			if res, err := nonexistent.Struct(nil); err == nil {
+				t.Fatalf("Call succeeded on non-existent contract: %v", res)
+			} else if (err != bind.ErrNoCode) {
+				t.Fatalf("Error mismatch: have %v, want %v", err, bind.ErrNoCode)
+			}
+		`,
+		nil,
+		nil,
+		nil,
+		nil,
+	},
 	// Tests that gas estimation works for contracts with weird gas mechanics too.
 	{
 		`FunkyGasPattern`,
@@ -1697,6 +1734,92 @@ var bindTests = []struct {
 		nil,
 		nil,
 		nil,
+	},
+	{
+		name: `ConstructorWithStructParam`,
+		contract: `
+		pragma solidity >=0.8.0 <0.9.0;
+		
+		contract ConstructorWithStructParam {
+			struct StructType {
+				uint256 field;
+			}
+		
+			constructor(StructType memory st) {}
+		}
+		`,
+		bytecode: []string{`0x608060405234801561001057600080fd5b506040516101c43803806101c48339818101604052810190610032919061014a565b50610177565b6000604051905090565b600080fd5b600080fd5b6000601f19601f8301169050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b6100958261004c565b810181811067ffffffffffffffff821117156100b4576100b361005d565b5b80604052505050565b60006100c7610038565b90506100d3828261008c565b919050565b6000819050919050565b6100eb816100d8565b81146100f657600080fd5b50565b600081519050610108816100e2565b92915050565b60006020828403121561012457610123610047565b5b61012e60206100bd565b9050600061013e848285016100f9565b60008301525092915050565b6000602082840312156101605761015f610042565b5b600061016e8482850161010e565b91505092915050565b603f806101856000396000f3fe6080604052600080fdfea2646970667358221220cdffa667affecefac5561f65f4a4ba914204a8d4eb859d8cd426fb306e5c12a364736f6c634300080a0033`},
+		abi:      []string{`[{"inputs":[{"components":[{"internalType":"uint256","name":"field","type":"uint256"}],"internalType":"struct ConstructorWithStructParam.StructType","name":"st","type":"tuple"}],"stateMutability":"nonpayable","type":"constructor"}]`},
+		imports: `
+			"math/big"
+			"github.com/klaytn/klaytn/accounts/abi/bind"
+			"github.com/klaytn/klaytn/accounts/abi/bind/backends"
+			"github.com/klaytn/klaytn/blockchain"
+			"github.com/klaytn/klaytn/crypto"
+		`,
+		tester: `
+			var (
+				key, _  = crypto.GenerateKey()
+				user, _ = bind.NewKeyedTransactorWithChainID(key, big.NewInt(1337))
+				sim     = backends.NewSimulatedBackend(blockchain.GenesisAlloc{addr: {Balance: big.NewInt(10000000000)}}) 
+			)
+			defer sim.Close()
+			_, tx, _, err := DeployConstructorWithStructParam(user, sim, ConstructorWithStructParamStructType{Field: big.NewInt(42)})
+			if err != nil {
+				t.Fatalf("DeployConstructorWithStructParam() got err %v; want nil err", err)
+			}
+			sim.Commit()
+			
+			if _, err = bind.WaitDeployed(nil, sim, tx); err != nil {
+				t.Logf("Deployment tx: %+v", tx)
+				t.Errorf("bind.WaitDeployed(nil, %T, <deployment tx>) got err %v; want nil err", sim, err)
+			}
+		`,
+	},
+	{
+		name: `NameConflict`,
+		contract: `
+		// SPDX-License-Identifier: GPL-3.0
+		pragma solidity >=0.4.22 <0.9.0;
+		contract oracle {
+			struct request {
+				bytes data;
+				bytes _data;
+			}
+			event log (int msg, int _msg);
+			function addRequest(request memory req) public pure {}
+			function getRequest() pure public returns (request memory) {
+				return request("", "");
+			}
+		}
+		`,
+		bytecode: []string{`0x608060405234801561001057600080fd5b5061042b806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063c2bb515f1461003b578063cce7b04814610059575b600080fd5b610043610075565b60405161005091906101af565b60405180910390f35b610073600480360381019061006e91906103ac565b6100b5565b005b61007d6100b8565b604051806040016040528060405180602001604052806000815250815260200160405180602001604052806000815250815250905090565b50565b604051806040016040528060608152602001606081525090565b600081519050919050565b600082825260208201905092915050565b60005b8381101561010c5780820151818401526020810190506100f1565b8381111561011b576000848401525b50505050565b6000601f19601f8301169050919050565b600061013d826100d2565b61014781856100dd565b93506101578185602086016100ee565b61016081610121565b840191505092915050565b600060408301600083015184820360008601526101888282610132565b915050602083015184820360208601526101a28282610132565b9150508091505092915050565b600060208201905081810360008301526101c9818461016b565b905092915050565b6000604051905090565b600080fd5b600080fd5b600080fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b61022282610121565b810181811067ffffffffffffffff82111715610241576102406101ea565b5b80604052505050565b60006102546101d1565b90506102608282610219565b919050565b600080fd5b600080fd5b600080fd5b600067ffffffffffffffff82111561028f5761028e6101ea565b5b61029882610121565b9050602081019050919050565b82818337600083830152505050565b60006102c76102c284610274565b61024a565b9050828152602081018484840111156102e3576102e261026f565b5b6102ee8482856102a5565b509392505050565b600082601f83011261030b5761030a61026a565b5b813561031b8482602086016102b4565b91505092915050565b60006040828403121561033a576103396101e5565b5b610344604061024a565b9050600082013567ffffffffffffffff81111561036457610363610265565b5b610370848285016102f6565b600083015250602082013567ffffffffffffffff81111561039457610393610265565b5b6103a0848285016102f6565b60208301525092915050565b6000602082840312156103c2576103c16101db565b5b600082013567ffffffffffffffff8111156103e0576103df6101e0565b5b6103ec84828501610324565b9150509291505056fea264697066735822122033bca1606af9b6aeba1673f98c52003cec19338539fb44b86690ce82c51483b564736f6c634300080e0033`},
+		abi:      []string{`[ { "anonymous": false, "inputs": [ { "indexed": false, "internalType": "int256", "name": "msg", "type": "int256" }, { "indexed": false, "internalType": "int256", "name": "_msg", "type": "int256" } ], "name": "log", "type": "event" }, { "inputs": [ { "components": [ { "internalType": "bytes", "name": "data", "type": "bytes" }, { "internalType": "bytes", "name": "_data", "type": "bytes" } ], "internalType": "struct oracle.request", "name": "req", "type": "tuple" } ], "name": "addRequest", "outputs": [], "stateMutability": "pure", "type": "function" }, { "inputs": [], "name": "getRequest", "outputs": [ { "components": [ { "internalType": "bytes", "name": "data", "type": "bytes" }, { "internalType": "bytes", "name": "_data", "type": "bytes" } ], "internalType": "struct oracle.request", "name": "", "type": "tuple" } ], "stateMutability": "pure", "type": "function" } ]`},
+		imports: `
+			"math/big"
+			"github.com/klaytn/klaytn/accounts/abi/bind"
+			"github.com/klaytn/klaytn/accounts/abi/bind/backends"
+			"github.com/klaytn/klaytn/blockchain"
+			"github.com/klaytn/klaytn/crypto"
+		`,
+		tester: `
+			var (
+				key, _  = crypto.GenerateKey()
+				user, _ = bind.NewKeyedTransactorWithChainID(key, big.NewInt(1337))
+				sim     = backends.NewSimulatedBackend(blockchain.GenesisAlloc{addr: {Balance: big.NewInt(10000000000)}})
+			)
+			defer sim.Close()
+			_, tx, _, err := DeployNameConflict(user, sim)
+			if err != nil {
+				t.Fatalf("DeployNameConflict() got err %v; want nil err", err)
+			}
+			sim.Commit()
+			
+			if _, err = bind.WaitDeployed(nil, sim, tx); err != nil {
+				t.Logf("Deployment tx: %+v", tx)
+				t.Errorf("bind.WaitDeployed(nil, %T, <deployment tx>) got err %v; want nil err", sim, err)
+			}
+		`,
 	},
 }
 
