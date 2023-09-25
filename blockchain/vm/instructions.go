@@ -393,7 +393,7 @@ func opSha3(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Sta
 	evm.interpreter.hasher.Write(data)
 	evm.interpreter.hasher.Read(evm.interpreter.hasherBuf[:])
 
-	if evm.vmConfig.EnablePreimageRecording {
+	if evm.Config.EnablePreimageRecording {
 		evm.StateDB.AddPreimage(evm.interpreter.hasherBuf, data)
 	}
 	stack.push(evm.interpreter.intPool.get().SetBytes(evm.interpreter.hasherBuf[:]))
@@ -517,16 +517,21 @@ func opExtCodeCopy(pc *uint64, evm *EVM, contract *Contract, memory *Memory, sta
 // opExtCodeHash returns the code hash of a specified account.
 // There are several cases when the function is called, while we can relay everything
 // to `state.GetCodeHash` function to ensure the correctness.
-//   (1) Caller tries to get the code hash of a normal contract account, state
+//
+//	(1) Caller tries to get the code hash of a normal contract account, state
+//
 // should return the relative code hash and set it as the result.
 //
-//   (2) Caller tries to get the code hash of a non-existent account, state should
+//	(2) Caller tries to get the code hash of a non-existent account, state should
+//
 // return common.Hash{} and zero will be set as the result.
 //
-//   (3) Caller tries to get the code hash for an account without contract code,
+//	(3) Caller tries to get the code hash for an account without contract code,
+//
 // state should return emptyCodeHash(0xc5d246...) as the result.
 //
-//   (4) Caller tries to get the code hash of a precompiled account, the result
+//	(4) Caller tries to get the code hash of a precompiled account, the result
+//
 // should be zero or emptyCodeHash.
 //
 // It is worth noting that in order to avoid unnecessary create and clean,
@@ -535,10 +540,12 @@ func opExtCodeCopy(pc *uint64, evm *EVM, contract *Contract, memory *Memory, sta
 // If the precompile account is not transferred any amount on a private or
 // customized chain, the return value will be zero.
 //
-//   (5) Caller tries to get the code hash for an account which is marked as suicided
+//	(5) Caller tries to get the code hash for an account which is marked as suicided
+//
 // in the current transaction, the code hash of this account should be returned.
 //
-//   (6) Caller tries to get the code hash for an account which is marked as deleted,
+//	(6) Caller tries to get the code hash for an account which is marked as deleted,
+//
 // this account should be regarded as a non-existent account and zero should be returned.
 func opExtCodeHash(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
 	slot := stack.Peek()
@@ -554,9 +561,9 @@ func opGasprice(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack 
 func opBlockhash(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
 	num := stack.pop()
 
-	n := evm.interpreter.intPool.get().Sub(evm.BlockNumber, common.Big257)
-	if num.Cmp(n) > 0 && num.Cmp(evm.BlockNumber) < 0 {
-		stack.push(evm.GetHash(num.Uint64()).Big())
+	n := evm.interpreter.intPool.get().Sub(evm.Context.BlockNumber, common.Big257)
+	if num.Cmp(n) > 0 && num.Cmp(evm.Context.BlockNumber) < 0 {
+		stack.push(evm.Context.GetHash(num.Uint64()).Big())
 	} else {
 		stack.push(evm.interpreter.intPool.getZero())
 	}
@@ -565,34 +572,34 @@ func opBlockhash(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack
 }
 
 func opCoinbase(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
-	stack.push(evm.interpreter.intPool.get().SetBytes(evm.Coinbase.Bytes()))
+	stack.push(evm.interpreter.intPool.get().SetBytes(evm.Context.Coinbase.Bytes()))
 	return nil, nil
 }
 
 func opTimestamp(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
-	stack.push(math.U256(evm.interpreter.intPool.get().Set(evm.Time)))
+	stack.push(math.U256(evm.interpreter.intPool.get().Set(evm.Context.Time)))
 	return nil, nil
 }
 
 func opNumber(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
-	stack.push(math.U256(evm.interpreter.intPool.get().Set(evm.BlockNumber)))
+	stack.push(math.U256(evm.interpreter.intPool.get().Set(evm.Context.BlockNumber)))
 	return nil, nil
 }
 
 func opDifficulty(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
-	stack.push(math.U256(evm.interpreter.intPool.get().Set(evm.BlockScore)))
+	stack.push(math.U256(evm.interpreter.intPool.get().Set(evm.Context.BlockScore)))
 	return nil, nil
 }
 
 func opRandom(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
 	// evm.BlockNumber.Uint64() is always greater than or equal to 1
 	// since evm will not run on the genesis block
-	stack.push(evm.GetHash(evm.BlockNumber.Uint64() - 1).Big())
+	stack.push(evm.Context.GetHash(evm.Context.BlockNumber.Uint64() - 1).Big())
 	return nil, nil
 }
 
 func opGasLimit(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
-	stack.push(math.U256(evm.interpreter.intPool.get().SetUint64(evm.GasLimit)))
+	stack.push(math.U256(evm.interpreter.intPool.get().SetUint64(evm.Context.GasLimit)))
 	return nil, nil
 }
 
@@ -918,7 +925,7 @@ func makeLog(size int) executionFunc {
 			Data:    d,
 			// This is a non-consensus field, but assigned here because
 			// blockchain/state doesn't know the current block number.
-			BlockNumber: evm.BlockNumber.Uint64(),
+			BlockNumber: evm.Context.BlockNumber.Uint64(),
 		})
 
 		evm.interpreter.intPool.put(mStart, mSize)

@@ -59,6 +59,8 @@ type InternalTxTracer struct {
 
 	interrupt uint32 // Atomic flag to signal execution interruption
 	reason    error  // Textual reason for the interruption
+
+	gasLimit uint64 // Amount of gas bought for the whole tx
 }
 
 // NewInternalTxTracer returns a new InternalTxTracer.
@@ -157,7 +159,7 @@ type RevertedInfo struct {
 }
 
 // CaptureStart implements the Tracer interface to initialize the tracing operation.
-func (this *InternalTxTracer) CaptureStart(from common.Address, to common.Address, create bool, input []byte, gas uint64, value *big.Int) error {
+func (this *InternalTxTracer) CaptureStart(from common.Address, to common.Address, create bool, input []byte, gas uint64, value *big.Int) {
 	this.ctx["type"] = CALL.String()
 	if create {
 		this.ctx["type"] = CREATE.String()
@@ -167,8 +169,6 @@ func (this *InternalTxTracer) CaptureStart(from common.Address, to common.Addres
 	this.ctx["input"] = hexutil.Encode(input)
 	this.ctx["gas"] = gas
 	this.ctx["value"] = value
-
-	return nil
 }
 
 // tracerLog is used to help comparing codes between this and call_tracer.js
@@ -197,29 +197,28 @@ func (this *InternalTxTracer) Stop(err error) {
 }
 
 // CaptureState implements the Tracer interface to trace a single step of VM execution.
-func (this *InternalTxTracer) CaptureState(env *EVM, pc uint64, op OpCode, gas, cost uint64, memory *Memory, logStack *Stack, contract *Contract, depth int, err error) error {
+func (this *InternalTxTracer) CaptureState(env *EVM, pc uint64, op OpCode, gas, cost uint64, scope *ScopeContext, depth int, err error) {
 	if this.err == nil {
 		// Initialize the context if it wasn't done yet
 		if !this.initialized {
-			this.ctx["block"] = env.BlockNumber.Uint64()
+			this.ctx["block"] = env.Context.BlockNumber.Uint64()
 			this.initialized = true
 		}
 		// If tracing was interrupted, set the error and stop
 		if atomic.LoadUint32(&this.interrupt) > 0 {
 			this.err = this.reason
-			return nil
+			return
 		}
 
 		log := &tracerLog{
 			env, pc, op, gas, cost,
-			memory, logStack, contract, depth, err,
+			scope.Memory, scope.Stack, scope.Contract, depth, err,
 		}
 		err := this.step(log)
 		if err != nil {
 			this.err = wrapError("step", err)
 		}
 	}
-	return nil
 }
 
 func (this *InternalTxTracer) step(log *tracerLog) error {
@@ -395,31 +394,36 @@ func (this *InternalTxTracer) step(log *tracerLog) error {
 
 // CaptureFault implements the Tracer interface to trace an execution fault
 // while running an opcode.
-func (this *InternalTxTracer) CaptureFault(env *EVM, pc uint64, op OpCode, gas, cost uint64, memory *Memory, s *Stack, contract *Contract, depth int, err error) error {
+func (this *InternalTxTracer) CaptureFault(env *EVM, pc uint64, op OpCode, gas, cost uint64, scope *ScopeContext, depth int, err error) {
 	if this.err == nil {
 		// Apart from the error, everything matches the previous invocation
 		this.errValue = err.Error()
 
 		log := &tracerLog{
 			env, pc, op, gas, cost,
-			memory, s, contract, depth, err,
+			scope.Memory, scope.Stack, scope.Contract, depth, err,
 		}
 		// fault does not return an error
 		this.fault(log)
 	}
-	return nil
 }
 
 // CaptureEnd is called after the call finishes to finalize the tracing.
-func (this *InternalTxTracer) CaptureEnd(output []byte, gasUsed uint64, t time.Duration, err error) error {
+func (this *InternalTxTracer) CaptureEnd(output []byte, gasUsed uint64, err error) {
 	this.ctx["output"] = hexutil.Encode(output)
 	this.ctx["gasUsed"] = gasUsed
-	this.ctx["time"] = t
 
 	if err != nil {
 		this.ctx["error"] = err
 	}
-	return nil
+}
+
+func (this *InternalTxTracer) CaptureTxStart(gasLimit uint64) {
+	this.gasLimit = gasLimit
+}
+
+func (this *InternalTxTracer) CaptureTxEnd(restGas uint64) {
+	this.ctx["gasUsed"] = this.gasLimit - restGas
 }
 
 func (this *InternalTxTracer) GetResult() (*InternalTxTrace, error) {

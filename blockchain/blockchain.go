@@ -707,7 +707,7 @@ func (bc *BlockChain) PrunableStateAt(root common.Hash, num uint64) (*state.Stat
 
 // StateAtWithPersistent returns a new mutable state based on a particular point in time with persistent trie nodes.
 func (bc *BlockChain) StateAtWithPersistent(root common.Hash) (*state.StateDB, error) {
-	exist := bc.stateCache.TrieDB().DoesExistNodeInPersistent(root.ExtendLegacy())
+	exist := bc.stateCache.TrieDB().DoesExistNodeInPersistent(root.ExtendZero())
 	if !exist {
 		return nil, ErrNotExistNode
 	}
@@ -718,7 +718,7 @@ func (bc *BlockChain) StateAtWithPersistent(root common.Hash) (*state.StateDB, e
 func (bc *BlockChain) StateAtWithGCLock(root common.Hash) (*state.StateDB, error) {
 	bc.RLockGCCachedNode()
 
-	exist := bc.stateCache.TrieDB().DoesExistCachedNode(root.ExtendLegacy())
+	exist := bc.stateCache.TrieDB().DoesExistCachedNode(root.ExtendZero())
 	if !exist {
 		bc.RUnlockGCCachedNode()
 		return nil, ErrNotExistNode
@@ -997,7 +997,7 @@ func (bc *BlockChain) GetLogsByHash(hash common.Hash) [][]*types.Log {
 // either from ephemeral in-memory cache, or from persistent storage.
 // Cannot retrieve nodes keyed with ExtHash
 func (bc *BlockChain) TrieNode(hash common.Hash) ([]byte, error) {
-	return bc.stateCache.TrieDB().Node(hash.ExtendLegacy())
+	return bc.stateCache.TrieDB().Node(hash.ExtendZero())
 }
 
 // ContractCode retrieves a blob of data associated with a contract hash
@@ -2706,10 +2706,11 @@ func (bc *BlockChain) ApplyTransaction(chainConfig *params.ChainConfig, author *
 		return nil, nil, err
 	}
 	// Create a new context to be used in the EVM environment
-	context := NewEVMContext(msg, header, bc, author)
+	blockContext := NewEVMBlockContext(header, bc, author)
+	txContext := NewEVMTxContext(msg, header)
 	// Create a new environment which holds all relevant information
 	// about the transaction and calling mechanisms.
-	vmenv := vm.NewEVM(context, statedb, chainConfig, vmConfig)
+	vmenv := vm.NewEVM(blockContext, txContext, statedb, chainConfig, vmConfig)
 	// Apply the transaction to the current state (included in the env)
 	result, err := ApplyMessage(vmenv, msg)
 	if err != nil {
@@ -2729,7 +2730,7 @@ func (bc *BlockChain) ApplyTransaction(chainConfig *params.ChainConfig, author *
 
 	receipt := types.NewReceipt(result.VmExecutionStatus, tx.Hash(), result.UsedGas)
 	// if the transaction created a contract, store the creation address in the receipt.
-	msg.FillContractAddress(vmenv.Context.Origin, receipt)
+	msg.FillContractAddress(vmenv.Origin, receipt)
 	// Set the receipt logs and create a bloom for filtering
 	receipt.Logs = statedb.GetLogs(tx.Hash())
 	receipt.Bloom = types.CreateBloom(types.Receipts{receipt})

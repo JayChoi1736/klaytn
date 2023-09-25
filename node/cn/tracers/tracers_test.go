@@ -55,17 +55,17 @@ type reverted struct {
 
 // callTrace is the result of a callTracer run.
 type callTrace struct {
-	Type     string          `json:"type"`
-	From     *common.Address `json:"from"`
-	To       *common.Address `json:"to"`
-	Input    hexutil.Bytes   `json:"input"`
-	Output   hexutil.Bytes   `json:"output"`
-	Gas      hexutil.Uint64  `json:"gas,omitempty"`
-	GasUsed  hexutil.Uint64  `json:"gasUsed,omitempty"`
-	Value    hexutil.Uint64  `json:"value,omitempty"`
-	Error    string          `json:"error,omitempty"`
-	Calls    []callTrace     `json:"calls,omitempty"`
-	Reverted *reverted       `json:"reverted,omitempty"`
+	Type     string               `json:"type"`
+	From     *common.Address      `json:"from"`
+	To       *common.Address      `json:"to"`
+	Input    hexutil.Bytes        `json:"input"`
+	Output   hexutil.Bytes        `json:"output"`
+	Gas      hexutil.Uint64       `json:"gas,omitempty"`
+	GasUsed  hexutil.Uint64       `json:"gasUsed,omitempty"`
+	Value    math.HexOrDecimal256 `json:"value,omitempty"`
+	Error    string               `json:"error,omitempty"`
+	Calls    []callTrace          `json:"calls,omitempty"`
+	Reverted *reverted            `json:"reverted,omitempty"`
 }
 
 type callContext struct {
@@ -107,16 +107,18 @@ func TestPrestateTracerCreate2(t *testing.T) {
 	    result: 0x60f3f640a8508fC6a86d45DF051962668E1e8AC7
 	*/
 	origin, _ := signer.Sender(tx)
-	context := vm.Context{
+	txContext := vm.TxContext{
+		Origin:   origin,
+		GasPrice: big.NewInt(1),
+	}
+	blockContext := vm.BlockContext{
 		CanTransfer: blockchain.CanTransfer,
 		Transfer:    blockchain.Transfer,
-		Origin:      origin,
 		Coinbase:    common.Address{},
 		BlockNumber: new(big.Int).SetUint64(8000000),
 		Time:        new(big.Int).SetUint64(5),
 		BlockScore:  big.NewInt(0x30000),
 		GasLimit:    uint64(6000000),
-		GasPrice:    big.NewInt(1),
 	}
 	alloc := blockchain.GenesisAlloc{}
 	// The code pushes 'deadbeef' into memory, then the other params, and calls CREATE2, then returns
@@ -137,10 +139,10 @@ func TestPrestateTracerCreate2(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create call tracer: %v", err)
 	}
-	evm := vm.NewEVM(context, statedb, params.CypressChainConfig, &vm.Config{Debug: true, Tracer: tracer})
+	evm := vm.NewEVM(blockContext, txContext, statedb, params.CypressChainConfig, &vm.Config{Debug: true, Tracer: tracer})
 
 	fork.SetHardForkBlockNumberConfig(&params.ChainConfig{})
-	msg, err := tx.AsMessageWithAccountKeyPicker(signer, statedb, context.BlockNumber.Uint64())
+	msg, err := tx.AsMessageWithAccountKeyPicker(signer, statedb, blockContext.BlockNumber.Uint64())
 	if err != nil {
 		t.Fatalf("failed to prepare transaction for tracing: %v", err)
 	}
@@ -194,9 +196,9 @@ func covertToCallTrace(t *testing.T, internalTx *vm.InternalTxTrace) *callTrace 
 			t.Fatal("failed to decode value of an internal transaction", "err", err)
 		}
 	}
-	var val hexutil.Uint64
+	var val math.HexOrDecimal256
 	if value != nil {
-		val = hexutil.Uint64(value.Uint64())
+		val = math.HexOrDecimal256(*value)
 	}
 
 	errStr := ""
@@ -287,15 +289,17 @@ func TestCallTracer(t *testing.T) {
 
 			origin, _ := signer.Sender(tx)
 
-			context := vm.Context{
+			txContext := vm.TxContext{
+				Origin:   origin,
+				GasPrice: tx.GasPrice(),
+			}
+			blockContext := vm.BlockContext{
 				CanTransfer: blockchain.CanTransfer,
 				Transfer:    blockchain.Transfer,
-				Origin:      origin,
 				BlockNumber: new(big.Int).SetUint64(uint64(test.Context.Number)),
 				Time:        new(big.Int).SetUint64(uint64(test.Context.Time)),
 				BlockScore:  (*big.Int)(test.Context.BlockScore),
 				GasLimit:    uint64(test.Context.GasLimit),
-				GasPrice:    tx.GasPrice(),
 			}
 			statedb := tests.MakePreState(database.NewMemoryDBManager(), test.Genesis.Alloc)
 
@@ -304,10 +308,10 @@ func TestCallTracer(t *testing.T) {
 			if err != nil {
 				t.Fatalf("failed to create call tracer: %v", err)
 			}
-			evm := vm.NewEVM(context, statedb, test.Genesis.Config, &vm.Config{Debug: true, Tracer: tracer})
+			evm := vm.NewEVM(blockContext, txContext, statedb, test.Genesis.Config, &vm.Config{Debug: true, Tracer: tracer})
 
 			fork.SetHardForkBlockNumberConfig(test.Genesis.Config)
-			msg, err := tx.AsMessageWithAccountKeyPicker(signer, statedb, context.BlockNumber.Uint64())
+			msg, err := tx.AsMessageWithAccountKeyPicker(signer, statedb, blockContext.BlockNumber.Uint64())
 			if err != nil {
 				t.Fatalf("failed to prepare transaction for tracing: %v", err)
 			}
@@ -398,24 +402,26 @@ func TestInternalCallTracer(t *testing.T) {
 
 			origin, _ := signer.Sender(tx)
 
-			context := vm.Context{
+			txContext := vm.TxContext{
+				Origin:   origin,
+				GasPrice: tx.GasPrice(),
+			}
+			blockContext := vm.BlockContext{
 				CanTransfer: blockchain.CanTransfer,
 				Transfer:    blockchain.Transfer,
-				Origin:      origin,
 				BlockNumber: new(big.Int).SetUint64(uint64(test.Context.Number)),
 				Time:        new(big.Int).SetUint64(uint64(test.Context.Time)),
 				BlockScore:  (*big.Int)(test.Context.BlockScore),
 				GasLimit:    uint64(test.Context.GasLimit),
-				GasPrice:    tx.GasPrice(),
 			}
 			statedb := tests.MakePreState(database.NewMemoryDBManager(), test.Genesis.Alloc)
 
 			// Create the tracer, the EVM environment and run it
 			tracer := vm.NewInternalTxTracer()
-			evm := vm.NewEVM(context, statedb, test.Genesis.Config, &vm.Config{Debug: true, Tracer: tracer})
+			evm := vm.NewEVM(blockContext, txContext, statedb, test.Genesis.Config, &vm.Config{Debug: true, Tracer: tracer})
 
 			fork.SetHardForkBlockNumberConfig(test.Genesis.Config)
-			msg, err := tx.AsMessageWithAccountKeyPicker(signer, statedb, context.BlockNumber.Uint64())
+			msg, err := tx.AsMessageWithAccountKeyPicker(signer, statedb, blockContext.BlockNumber.Uint64())
 			if err != nil {
 				t.Fatalf("failed to prepare transaction for tracing: %v", err)
 			}

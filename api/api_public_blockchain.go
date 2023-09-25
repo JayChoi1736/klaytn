@@ -25,9 +25,8 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"reflect"
 	"time"
-
-	"github.com/klaytn/klaytn/node/cn/filters"
 
 	"github.com/klaytn/klaytn/blockchain"
 	"github.com/klaytn/klaytn/blockchain/types"
@@ -39,6 +38,7 @@ import (
 	"github.com/klaytn/klaytn/common/math"
 	"github.com/klaytn/klaytn/log"
 	"github.com/klaytn/klaytn/networks/rpc"
+	"github.com/klaytn/klaytn/node/cn/filters"
 	"github.com/klaytn/klaytn/params"
 	"github.com/klaytn/klaytn/rlp"
 )
@@ -150,23 +150,24 @@ func (s *PublicBlockChainAPI) GetAccount(ctx context.Context, address common.Add
 	return serAcc, state.Error()
 }
 
-func (s *PublicKlayAPI) ForkStatus(ctx context.Context, number rpc.BlockNumber) (map[string]bool, error) {
+func (s *PublicKlayAPI) ForkStatus(ctx context.Context, number rpc.BlockNumber) (map[string]interface{}, error) {
 	block, err := s.b.BlockByNumber(ctx, number)
 	if err != nil {
 		return nil, err
 	}
-	blockNumber := block.Number()
-	cfg := s.b.ChainConfig()
+	blkNum := block.Number()
+	rules := s.b.ChainConfig().Rules(blkNum)
+	status := make(map[string]interface{})
 
-	return map[string]bool{
-		"Istanbul":  cfg.IsIstanbulForkEnabled(blockNumber),
-		"London":    cfg.IsLondonForkEnabled(blockNumber),
-		"EthTxType": cfg.IsEthTxTypeForkEnabled(blockNumber),
-		"Magma":     cfg.IsMagmaForkEnabled(blockNumber),
-		"Kore":      cfg.IsKoreForkEnabled(blockNumber),
-		"KIP103":    cfg.IsKIP103ForkBlock(blockNumber),
-		"Shanghai":  cfg.IsShanghaiForkEnabled(blockNumber),
-	}, nil
+	rulesVal := reflect.ValueOf(rules)
+	for i := 0; i < rulesVal.NumField(); i++ {
+		val := rulesVal.Field(i)
+		typ := rulesVal.Type().Field(i)
+		status[typ.Name] = val.Interface()
+	}
+	// `IsKIP103` is not defined in the `Rules` struct. Exceptionally, we manually add it
+	status["IsKIP103"] = s.b.ChainConfig().IsKIP103ForkBlock(blkNum)
+	return status, nil
 }
 
 // rpcMarshalHeader converts the given header to the RPC output.
@@ -280,9 +281,13 @@ type CallArgs struct {
 	Value                hexutil.Big     `json:"value"`
 	Data                 hexutil.Bytes   `json:"data"`
 	Input                hexutil.Bytes   `json:"input"`
+
+	// Introduced by AccessListTxType transaction.
+	AccessList *types.AccessList `json:"accessList,omitempty"`
+	ChainID    *hexutil.Big      `json:"chainId,omitempty"`
 }
 
-func (args *CallArgs) data() []byte {
+func (args *CallArgs) InputData() []byte {
 	if args.Input != nil {
 		return args.Input
 	}
@@ -311,7 +316,7 @@ func DoCall(ctx context.Context, b Backend, args CallArgs, blockNrOrHash rpc.Blo
 	// this makes sure resources are cleaned up.
 	defer cancel()
 
-	intrinsicGas, err := types.IntrinsicGas(args.data(), nil, args.To == nil, b.ChainConfig().Rules(header.Number))
+	intrinsicGas, err := types.IntrinsicGas(args.InputData(), nil, args.To == nil, b.ChainConfig().Rules(header.Number))
 	if err != nil {
 		return nil, 0, err
 	}
@@ -704,10 +709,9 @@ func (args *CallArgs) ToMessage(globalGasCap uint64, baseFee *big.Int, intrinsic
 		value = args.Value.ToInt()
 	}
 
-	// TODO-Klaytn: Klaytn does not support accessList yet.
-	// var accessList types.AccessList
-	// if args.AccessList != nil {
-	//	 accessList = *args.AccessList
-	// }
-	return types.NewMessage(addr, args.To, 0, value, gas, gasPrice, args.data(), false, intrinsicGas), nil
+	var accessList types.AccessList
+	if args.AccessList != nil {
+		accessList = *args.AccessList
+	}
+	return types.NewMessage(addr, args.To, 0, value, gas, gasPrice, args.Data, false, intrinsicGas, accessList), nil
 }
