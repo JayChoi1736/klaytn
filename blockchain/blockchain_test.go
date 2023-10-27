@@ -75,12 +75,12 @@ func newCanonical(engine consensus.Engine, n int, full bool) (database.DBManager
 	}
 	if full {
 		// Full block-chain requested
-		blocks := makeBlockChain(genesis, n, engine, db, canonicalSeed)
+		blocks := MakeBlockChain(genesis, n, engine, db, canonicalSeed)
 		_, err := blockchain.InsertChain(blocks)
 		return db, blockchain, err
 	}
 	// Header-only chain requested
-	headers := makeHeaderChain(genesis.Header(), n, engine, db, canonicalSeed)
+	headers := MakeHeaderChain(genesis.Header(), n, engine, db, canonicalSeed)
 	_, err := blockchain.InsertHeaderChain(headers, 1)
 	return db, blockchain, err
 }
@@ -112,12 +112,12 @@ func testFork(t *testing.T, blockchain *BlockChain, i, n int, full bool, compara
 		headerChainB []*types.Header
 	)
 	if full {
-		blockChainB = makeBlockChain(blockchain2.CurrentBlock(), n, gxhash.NewFaker(), db, forkSeed)
+		blockChainB = MakeBlockChain(blockchain2.CurrentBlock(), n, gxhash.NewFaker(), db, forkSeed)
 		if _, err := blockchain2.InsertChain(blockChainB); err != nil {
 			t.Fatalf("failed to insert forking chain: %v", err)
 		}
 	} else {
-		headerChainB = makeHeaderChain(blockchain2.CurrentHeader(), n, gxhash.NewFaker(), db, forkSeed)
+		headerChainB = MakeHeaderChain(blockchain2.CurrentHeader(), n, gxhash.NewFaker(), db, forkSeed)
 		if _, err := blockchain2.InsertHeaderChain(headerChainB, 1); err != nil {
 			t.Fatalf("failed to insert forking chain: %v", err)
 		}
@@ -220,7 +220,7 @@ func TestLastBlock(t *testing.T) {
 	}
 	defer blockchain.Stop()
 
-	blocks := makeBlockChain(blockchain.CurrentBlock(), 1, gxhash.NewFullFaker(), blockchain.db, 0)
+	blocks := MakeBlockChain(blockchain.CurrentBlock(), 1, gxhash.NewFullFaker(), blockchain.db, 0)
 	if _, err := blockchain.InsertChain(blocks); err != nil {
 		t.Fatalf("Failed to insert block: %v", err)
 	}
@@ -361,12 +361,12 @@ func testBrokenChain(t *testing.T, full bool) {
 
 	// Create a forked chain, and try to insert with a missing link
 	if full {
-		chain := makeBlockChain(blockchain.CurrentBlock(), 5, gxhash.NewFaker(), db, forkSeed)[1:]
+		chain := MakeBlockChain(blockchain.CurrentBlock(), 5, gxhash.NewFaker(), db, forkSeed)[1:]
 		if err := testBlockChainImport(chain, blockchain); err == nil {
 			t.Errorf("broken block chain not reported")
 		}
 	} else {
-		chain := makeHeaderChain(blockchain.CurrentHeader(), 5, gxhash.NewFaker(), db, forkSeed)[1:]
+		chain := MakeHeaderChain(blockchain.CurrentHeader(), 5, gxhash.NewFaker(), db, forkSeed)[1:]
 		if err := testHeaderChainImport(chain, blockchain); err == nil {
 			t.Errorf("broken header chain not reported")
 		}
@@ -483,14 +483,14 @@ func testBadHashes(t *testing.T, full bool) {
 
 	// Create a chain, ban a hash and try to import
 	if full {
-		blocks := makeBlockChain(blockchain.CurrentBlock(), 3, gxhash.NewFaker(), db, 10)
+		blocks := MakeBlockChain(blockchain.CurrentBlock(), 3, gxhash.NewFaker(), db, 10)
 
 		BadHashes[blocks[2].Header().Hash()] = true
 		defer func() { delete(BadHashes, blocks[2].Header().Hash()) }()
 
 		_, err = blockchain.InsertChain(blocks)
 	} else {
-		headers := makeHeaderChain(blockchain.CurrentHeader(), 3, gxhash.NewFaker(), db, 10)
+		headers := MakeHeaderChain(blockchain.CurrentHeader(), 3, gxhash.NewFaker(), db, 10)
 
 		BadHashes[headers[2].Hash()] = true
 		defer func() { delete(BadHashes, headers[2].Hash()) }()
@@ -513,9 +513,10 @@ func testReorgBadHashes(t *testing.T, full bool) {
 	if err != nil {
 		t.Fatalf("failed to create pristine chain: %v", err)
 	}
+	blockchain.Config().Istanbul = params.GetDefaultIstanbulConfig()
 	// Create a chain, import and ban afterwards
-	headers := makeHeaderChain(blockchain.CurrentHeader(), 4, gxhash.NewFaker(), db, 10)
-	blocks := makeBlockChain(blockchain.CurrentBlock(), 4, gxhash.NewFaker(), db, 10)
+	headers := MakeHeaderChain(blockchain.CurrentHeader(), 4, gxhash.NewFaker(), db, 10)
+	blocks := MakeBlockChain(blockchain.CurrentBlock(), 4, gxhash.NewFaker(), db, 10)
 
 	if full {
 		if _, err = blockchain.InsertChain(blocks); err != nil {
@@ -548,8 +549,8 @@ func testReorgBadHashes(t *testing.T, full bool) {
 			t.Errorf("last block hash mismatch: have: %x, want %x", ncm.CurrentBlock().Hash(), blocks[2].Header().Hash())
 		}
 	} else {
-		if ncm.CurrentHeader().Hash() != headers[2].Hash() {
-			t.Errorf("last header hash mismatch: have: %x, want %x", ncm.CurrentHeader().Hash(), headers[2].Hash())
+		if ncm.CurrentHeader().Hash() != blocks[0].Hash() {
+			t.Errorf("last header hash mismatch: have: %x, want %x", ncm.CurrentHeader().Hash(), ncm.GetBlockByNumber(0).Hash())
 		}
 	}
 	ncm.Stop()
@@ -575,7 +576,7 @@ func testInsertNonceError(t *testing.T, full bool) {
 			failNum uint64
 		)
 		if full {
-			blocks := makeBlockChain(blockchain.CurrentBlock(), i, gxhash.NewFaker(), db, 0)
+			blocks := MakeBlockChain(blockchain.CurrentBlock(), i, gxhash.NewFaker(), db, 0)
 
 			failAt = rand.Int() % len(blocks)
 			failNum = blocks[failAt].NumberU64()
@@ -583,7 +584,7 @@ func testInsertNonceError(t *testing.T, full bool) {
 			blockchain.engine = gxhash.NewFakeFailer(failNum)
 			failRes, err = blockchain.InsertChain(blocks)
 		} else {
-			headers := makeHeaderChain(blockchain.CurrentHeader(), i, gxhash.NewFaker(), db, 0)
+			headers := MakeHeaderChain(blockchain.CurrentHeader(), i, gxhash.NewFaker(), db, 0)
 
 			failAt = rand.Int() % len(headers)
 			failNum = headers[failAt].Number.Uint64()
@@ -1815,9 +1816,9 @@ func genInternalTxTransaction(t *testing.T, block *BlockGen, address common.Addr
 
 // TestCallTraceChainEventSubscription tests if the method insertChain posts a chain event correctly.
 // Scenario:
-// 1. Deploy a contract
-//   sendKlay(n uint32, receiver address): send 1 peb to `receiver` address `n` times.
-// 2. Send a smart contract execution transaction
+//  1. Deploy a contract
+//     sendKlay(n uint32, receiver address): send 1 peb to `receiver` address `n` times.
+//  2. Send a smart contract execution transaction
 func TestCallTraceChainEventSubscription(t *testing.T) {
 	// configure and generate a sample block chain
 	var (
@@ -2107,4 +2108,99 @@ func TestBlockChain_InsertChain_InsertFutureBlocks(t *testing.T) {
 	}
 
 	assert.Equal(t, consensus.ErrUnknownAncestor, err)
+}
+
+// TestTransientStorageReset ensures the transient storage is wiped correctly
+// between transactions.
+func TestTransientStorageReset(t *testing.T) {
+	var (
+		key, _      = crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")
+		address     = crypto.PubkeyToAddress(key.PublicKey)
+		destAddress = crypto.CreateAddress(address, 0)
+		funds       = big.NewInt(1000000000000000000)
+
+		testEngine = gxhash.NewFaker()
+	)
+	code := append([]byte{
+		// TLoad value with location 1
+		byte(vm.PUSH1), 0x1,
+		byte(vm.TLOAD),
+
+		// PUSH location
+		byte(vm.PUSH1), 0x1,
+
+		// SStore location:value
+		byte(vm.SSTORE),
+	}, make([]byte, 32-6)...)
+	initCode := []byte{
+		// TSTORE 1:1
+		byte(vm.PUSH1), 0x1,
+		byte(vm.PUSH1), 0x1,
+		byte(vm.TSTORE),
+
+		// Get the runtime-code on the stack
+		byte(vm.PUSH32),
+	}
+	initCode = append(initCode, code...)
+	initCode = append(initCode, []byte{
+		byte(vm.PUSH1), 0x0, // offset
+		byte(vm.MSTORE),
+		byte(vm.PUSH1), 0x6, // size
+		byte(vm.PUSH1), 0x0, // offset
+		byte(vm.RETURN), // return 6 bytes of zero-code
+	}...)
+
+	gspec := &Genesis{
+		Config: params.TestChainConfig.Copy(),
+		Alloc: GenesisAlloc{
+			address: {Balance: funds},
+		},
+	}
+	gspec.Config.SetDefaults()
+	gspec.Config.IstanbulCompatibleBlock = common.Big0
+	gspec.Config.LondonCompatibleBlock = common.Big0
+	gspec.Config.EthTxTypeCompatibleBlock = common.Big0
+	gspec.Config.MagmaCompatibleBlock = common.Big0
+	gspec.Config.KoreCompatibleBlock = common.Big0
+	gspec.Config.ShanghaiCompatibleBlock = common.Big0
+	gspec.Config.CancunCompatibleBlock = common.Big0
+
+	testdb := database.NewMemoryDBManager()
+	genesis := gspec.MustCommit(testdb)
+	blocks, _ := GenerateChain(gspec.Config, genesis, testEngine, testdb, 10, func(i int, gen *BlockGen) {
+		fee := big.NewInt(1)
+		if gen.header.BaseFee != nil {
+			fee = gen.header.BaseFee
+		}
+		gen.SetRewardbase(common.Address{1})
+		signer := types.LatestSigner(gen.config)
+		tx, _ := types.SignTx(types.NewTransaction(gen.TxNonce(address), common.Address{}, nil, 100000, fee, initCode), signer, key)
+		gen.AddTx(tx)
+		tx, _ = types.SignTx(types.NewTransaction(gen.TxNonce(address), destAddress, nil, 100000, fee, nil), signer, key)
+		gen.AddTx(tx)
+	})
+
+	// Initialize the blockchain with 1153 enabled.
+	testdb = database.NewMemoryDBManager()
+	gspec.MustCommit(testdb)
+	chain, err := NewBlockChain(testdb, nil, gspec.Config, testEngine, vm.Config{})
+	if err != nil {
+		t.Fatalf("failed to create tester chain: %v", err)
+	}
+	defer chain.Stop()
+
+	// Import the blocks
+	if _, err := chain.InsertChain(blocks); err != nil {
+		t.Fatalf("failed to insert into chain: %v", err)
+	}
+	// Check the storage
+	state, err := chain.StateAt(chain.CurrentHeader().Root)
+	if err != nil {
+		t.Fatalf("Failed to load state %v", err)
+	}
+	loc := common.BytesToHash([]byte{1})
+	slot := state.GetState(destAddress, loc)
+	if slot != (common.Hash{}) {
+		t.Fatalf("Unexpected dirty storage slot")
+	}
 }

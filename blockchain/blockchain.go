@@ -514,6 +514,15 @@ func (bc *BlockChain) loadLastState() error {
 // that the rewind must pass the specified state root. The method will try to
 // delete minimal data from disk whilst retaining chain consistency.
 func (bc *BlockChain) SetHead(head uint64) error {
+	// With the live pruning enabled, an attempt to SetHead into a state-pruned block number
+	// may result in an infinite loop, trying to find the existing block (probably the genesis block).
+	// If the target `head` is below the surviving block numbers, SetHead early exits with an error.
+	if lastPruned, err := bc.db.ReadLastPrunedBlockNumber(); err == nil {
+		if head <= lastPruned {
+			return fmt.Errorf("[SetHead] Cannot rewind to a state-pruned block number. lastPrunedBlock=%d targetHead=%d",
+				lastPruned, head)
+		}
+	}
 	_, err := bc.setHeadBeyondRoot(head, common.Hash{}, false)
 	return err
 }
@@ -533,7 +542,9 @@ func (bc *BlockChain) setHeadBeyondRoot(head uint64, root common.Hash, repair bo
 	// Track the block number of the requested root hash
 	var rootNumber uint64 // (no root == always 0)
 
-	updateFn := func(header *types.Header) error {
+	originLatestBlkNum := bc.CurrentBlock().Number().Uint64()
+
+	updateFn := func(header *types.Header) (uint64, error) {
 		// Rewind the block chain, ensuring we don't end up with a stateless head block
 		if currentBlock := bc.CurrentBlock(); currentBlock != nil && header.Number.Uint64() <= currentBlock.NumberU64() {
 			newHeadBlock := bc.GetBlock(header.Hash(), header.Number.Uint64())
@@ -570,10 +581,9 @@ func (bc *BlockChain) setHeadBeyondRoot(head uint64, root common.Hash, repair bo
 					logger.Debug("Skipping block with threshold state", "number", newHeadBlock.NumberU64(), "hash", newHeadBlock.Hash().String(), "root", newHeadBlock.Root().String())
 					newHeadBlock = bc.GetBlock(newHeadBlock.ParentHash(), newHeadBlock.NumberU64()-1) // Keep rewinding
 				}
-
 			}
 			if newHeadBlock.NumberU64() == 0 {
-				return errors.New("rewound to block number 0, but repair failed")
+				return 0, errors.New("rewound to block number 0, but repair failed")
 			}
 			bc.db.WriteHeadBlockHash(newHeadBlock.Hash())
 
@@ -600,22 +610,30 @@ func (bc *BlockChain) setHeadBeyondRoot(head uint64, root common.Hash, repair bo
 			// to low, so it's safe the update in-memory markers directly.
 			bc.currentFastBlock.Store(newHeadFastBlock)
 		}
-		return nil
+		return bc.CurrentBlock().Number().Uint64(), nil
 	}
 
 	// Rewind the header chain, deleting all block bodies until then
 	delFn := func(hash common.Hash, num uint64) {
-		// Remove relative body and receipts from the active store.
+		// Remove relative body, receipts, header-governance database,
+		// istanbul snapshot database, and staking info database from the active store.
 		// The header, total difficulty and canonical hash will be
 		// removed in the hc.SetHead function.
 		bc.db.DeleteBody(hash, num)
 		bc.db.DeleteReceipts(hash, num)
+		bc.db.DeleteGovernance(num)
+		if params.IsCheckpointInterval(num) {
+			bc.db.DeleteIstanbulSnapshot(hash)
+		}
+		if bc.Config().Istanbul.ProposerPolicy == params.WeightedRandom && params.IsStakingUpdateInterval(num) {
+			bc.db.DeleteStakingInfo(num)
+		}
 	}
 
 	// If SetHead was only called as a chain reparation method, try to skip
 	// touching the header chain altogether
 	if repair {
-		if err := updateFn(bc.CurrentBlock().Header()); err != nil {
+		if _, err := updateFn(bc.CurrentBlock().Header()); err != nil {
 			return 0, err
 		}
 	} else {
@@ -627,10 +645,29 @@ func (bc *BlockChain) setHeadBeyondRoot(head uint64, root common.Hash, repair bo
 		}
 	}
 
+	// Delete istanbul snapshot database further two epochs
+	var (
+		curBlkNum   = bc.CurrentBlock().Number().Uint64()
+		epoch       = bc.Config().Istanbul.Epoch
+		votingEpoch = curBlkNum - (curBlkNum % epoch)
+	)
+	if votingEpoch == 0 {
+		votingEpoch = 1
+	}
+	// Delete the snapshot state beyond the block number of the previous epoch on the right
+	for i := curBlkNum; i >= votingEpoch; i-- {
+		if params.IsCheckpointInterval(i) {
+			// delete from sethead number to previous two epoch block nums
+			// to handle a block that contains non-empty vote data to make sure
+			// the `HandleGovernanceVote()` cannot be skipped
+			bc.db.DeleteIstanbulSnapshot(bc.GetBlockByNumber(i).Hash())
+		}
+	}
+	logger.Trace("[SetHead] Snapshot database deleted", "from", originLatestBlkNum, "to", votingEpoch)
+
 	// Clear out any stale content from the caches
 	bc.futureBlocks.Purge()
 	bc.db.ClearBlockChainCache()
-	// TODO-Klaytn add governance DB deletion logic.
 
 	return rootNumber, bc.loadLastState()
 }
@@ -1351,10 +1388,10 @@ func (bc *BlockChain) writeStateTrie(block *types.Block, state *state.StateDB) e
 		}
 
 		if isCommitTrieRequired(bc, block.NumberU64()) {
-			logger.Trace("Commit the state trie into the disk", "blocknum", block.NumberU64())
 			if err := trieDB.Commit(block.Header().Root, true, block.NumberU64()); err != nil {
 				return err
 			}
+			logger.Trace("Committed the state trie into the disk", "blocknum", block.NumberU64())
 
 			if bc.checkStartStateMigration(block.NumberU64(), root) {
 				// flush referenced trie nodes out to new stateTrieDB
@@ -1447,6 +1484,7 @@ func (bc *BlockChain) pruneTrieNodeLoop() {
 				marks := bc.db.ReadPruningMarks(startNum, limit+1)
 				bc.db.PruneTrieNodes(marks)
 				bc.db.DeletePruningMarks(marks)
+				bc.db.WriteLastPrunedBlockNumber(limit)
 
 				logger.Info("Pruned trie nodes", "number", num, "start", startNum, "limit", limit,
 					"count", len(marks), "elapsed", time.Since(startTime))

@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/klaytn/klaytn/common"
 	"github.com/klaytn/klaytn/params"
 )
 
@@ -28,6 +29,10 @@ import (
 // defined jump tables are not polluted.
 func EnableEIP(eipNum int, jt *JumpTable) error {
 	switch eipNum {
+	case 6780:
+		enable6780(jt)
+	case 5656:
+		enable5656(jt)
 	case 3860:
 		enable3860(jt)
 	case 3855:
@@ -44,6 +49,8 @@ func EnableEIP(eipNum int, jt *JumpTable) error {
 		enable1884(jt)
 	case 1344:
 		enable1344(jt)
+	case 1153:
+		enable1153(jt)
 	default:
 		return fmt.Errorf("undefined eip %d", eipNum)
 	}
@@ -71,9 +78,9 @@ func enable1884(jt *JumpTable) {
 	}
 }
 
-func opSelfBalance(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
-	balance := evm.interpreter.intPool.get().Set(evm.StateDB.GetBalance(contract.Address()))
-	stack.push(balance)
+func opSelfBalance(pc *uint64, evm *EVM, scope *ScopeContext) ([]byte, error) {
+	balance := evm.interpreter.intPool.get().Set(evm.StateDB.GetBalance(scope.Contract.Address()))
+	scope.Stack.push(balance)
 	return nil, nil
 }
 
@@ -91,9 +98,9 @@ func enable1344(jt *JumpTable) {
 }
 
 // opChainID implements CHAINID opcode
-func opChainID(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
+func opChainID(pc *uint64, evm *EVM, scope *ScopeContext) ([]byte, error) {
 	chainId := evm.interpreter.intPool.get().Set(evm.chainConfig.ChainID)
-	stack.push(chainId)
+	scope.Stack.push(chainId)
 	return nil, nil
 }
 
@@ -115,6 +122,47 @@ func enableIstanbulComputationCostModification(jt *JumpTable) {
 	jt[SAR].computationCost = params.SarComputationCostIstanbul
 }
 
+// enable1153 applies EIP-1153 "Transient Storage"
+// - Adds TLOAD that reads from transient storage
+// - Adds TSTORE that writes to transient storage
+func enable1153(jt *JumpTable) {
+	jt[TLOAD] = &operation{
+		execute:         opTload,
+		constantGas:     params.WarmStorageReadCostEIP2929,
+		minStack:        minStack(1, 1),
+		maxStack:        maxStack(1, 1),
+		computationCost: params.TloadComputationCost,
+	}
+
+	jt[TSTORE] = &operation{
+		execute:         opTstore,
+		constantGas:     params.WarmStorageReadCostEIP2929,
+		minStack:        minStack(2, 0),
+		maxStack:        maxStack(2, 0),
+		computationCost: params.TstoreComputationCost,
+	}
+}
+
+// opTload implements TLOAD opcode
+func opTload(pc *uint64, evm *EVM, scope *ScopeContext) ([]byte, error) {
+	loc := scope.Stack.Peek()
+	val := evm.StateDB.GetTransientState(scope.Contract.Address(), common.BigToHash(loc))
+	loc.SetBytes(val.Bytes())
+	return nil, nil
+}
+
+// opTstore implements TSTORE opcode
+func opTstore(pc *uint64, evm *EVM, scope *ScopeContext) ([]byte, error) {
+	if evm.interpreter.readOnly {
+		return nil, ErrWriteProtection
+	}
+	loc := scope.Stack.pop()
+	val := scope.Stack.pop()
+	evm.StateDB.SetTransientState(scope.Contract.Address(), common.BigToHash(loc), common.BigToHash(val))
+	evm.interpreter.intPool.put(loc, val)
+	return nil, nil
+}
+
 // enable3198 applies EIP-3198 (BASEFEE Opcode)
 // - Adds an opcode that returns the current block's base fee.
 func enable3198(jt *JumpTable) {
@@ -129,9 +177,9 @@ func enable3198(jt *JumpTable) {
 }
 
 // opBaseFee implements BASEFEE opcode
-func opBaseFee(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
+func opBaseFee(pc *uint64, evm *EVM, scope *ScopeContext) ([]byte, error) {
 	baseFee := evm.interpreter.intPool.get().Set(evm.Context.BaseFee)
-	stack.push(baseFee)
+	scope.Stack.push(baseFee)
 	return nil, nil
 }
 
@@ -206,8 +254,8 @@ func enable3855(jt *JumpTable) {
 }
 
 // opPush0 implements the PUSH0 opcode
-func opPush0(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error) {
-	stack.push(new(big.Int))
+func opPush0(pc *uint64, evm *EVM, scope *ScopeContext) ([]byte, error) {
+	scope.Stack.push(new(big.Int))
 	return nil, nil
 }
 
@@ -216,4 +264,43 @@ func opPush0(pc *uint64, evm *EVM, contract *Contract, memory *Memory, stack *St
 func enable3860(jt *JumpTable) {
 	jt[CREATE].dynamicGas = gasCreateEip3860
 	jt[CREATE2].dynamicGas = gasCreate2Eip3860
+}
+
+// enable5656 enables EIP-5656 (MCOPY opcode)
+// https://eips.ethereum.org/EIPS/eip-5656
+func enable5656(jt *JumpTable) {
+	jt[MCOPY] = &operation{
+		execute:         opMcopy,
+		constantGas:     GasFastestStep,
+		dynamicGas:      gasMcopy,
+		minStack:        minStack(3, 0),
+		maxStack:        maxStack(3, 0),
+		memorySize:      memoryMcopy,
+		computationCost: params.McopyComputationCost,
+	}
+}
+
+// opMcopy implements the MCOPY opcode (https://eips.ethereum.org/EIPS/eip-5656)
+func opMcopy(pc *uint64, evm *EVM, scope *ScopeContext) ([]byte, error) {
+	var (
+		dst    = scope.Stack.pop()
+		src    = scope.Stack.pop()
+		length = scope.Stack.pop()
+	)
+	// These values are checked for overflow during memory expansion calculation
+	// (the memorySize function on the opcode).
+	scope.Memory.Copy(dst.Uint64(), src.Uint64(), length.Uint64())
+	return nil, nil
+}
+
+// enable6780 applies EIP-6780 (deactivate SELFDESTRUCT)
+func enable6780(jt *JumpTable) {
+	jt[SELFDESTRUCT] = &operation{
+		execute:         opSelfdestruct6780,
+		dynamicGas:      gasSelfdestructEIP3529,
+		constantGas:     params.SelfdestructGas,
+		minStack:        minStack(1, 0),
+		maxStack:        maxStack(1, 0),
+		computationCost: params.SelfDestructComputationCost,
+	}
 }

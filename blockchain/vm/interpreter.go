@@ -98,6 +98,8 @@ func NewEVMInterpreter(evm *EVM) *EVMInterpreter {
 	if cfg.JumpTable[STOP] == nil {
 		var jt JumpTable
 		switch {
+		case evm.chainRules.IsCancun:
+			jt = CancunInstructionSet
 		case evm.chainRules.IsShanghai:
 			jt = ShanghaiInstructionSet
 		case evm.chainRules.IsKore:
@@ -335,33 +337,26 @@ func (in *EVMInterpreter) Run(contract *Contract, input []byte) (ret []byte, err
 		}
 
 		// execute the operation
-		res, err = operation.execute(&pc, in.evm, contract, mem, stack)
+		res, err = operation.execute(&pc, in.evm, &ScopeContext{mem, stack, contract})
 		// verifyPool is a build flag. Pool verification makes sure the integrity
 		// of the integer pool by comparing values to a default value.
 		if verifyPool {
 			verifyIntegerPool(in.intPool)
 		}
-		// if the operation clears the return data (e.g. it has returning data)
-		// set the last return to the result of the operation.
-		if operation.returns {
-			in.returnData = res
-		}
 
-		switch {
-		case err != nil:
-			return nil, err // TODO-Klaytn-Issue615
-		case operation.reverts:
-			return res, ErrExecutionReverted // TODO-Klaytn-Issue615
-		case operation.halts:
-			return res, nil
-		case !operation.jumps:
-			pc++
+		if err != nil {
+			break
 		}
+		pc++
 	}
 
 	abort := atomic.LoadInt32(&in.evm.abort)
 	if (abort & CancelByTotalTimeLimit) != 0 {
 		return nil, ErrTotalTimeLimitReached // TODO-Klaytn-Issue615
 	}
-	return nil, nil
+	if err == errStopToken {
+		err = nil // clear stop token error
+	}
+
+	return res, err
 }

@@ -30,6 +30,7 @@ import (
 
 	lru "github.com/hashicorp/golang-lru"
 	"github.com/klaytn/klaytn/blockchain/state"
+	"github.com/klaytn/klaytn/blockchain/system"
 	"github.com/klaytn/klaytn/blockchain/types"
 	"github.com/klaytn/klaytn/common"
 	"github.com/klaytn/klaytn/common/hexutil"
@@ -40,20 +41,20 @@ import (
 	"github.com/klaytn/klaytn/consensus/misc"
 	"github.com/klaytn/klaytn/crypto/sha3"
 	"github.com/klaytn/klaytn/networks/rpc"
+	"github.com/klaytn/klaytn/params"
 	"github.com/klaytn/klaytn/reward"
 	"github.com/klaytn/klaytn/rlp"
 )
 
 const (
-	// checkpointInterval = 1024 // Number of blocks after which to save the vote snapshot to the database
+	// CheckpointInterval = 1024 // Number of blocks after which to save the vote snapshot to the database
 	// inmemorySnapshots  = 128  // Number of recent vote snapshots to keep in memory
 	// inmemoryPeers      = 40
 	// inmemoryMessages   = 1024
 
-	checkpointInterval = 1024 // Number of blocks after which to save the vote snapshot to the database
-	inmemorySnapshots  = 496  // Number of recent vote snapshots to keep in memory
-	inmemoryPeers      = 200
-	inmemoryMessages   = 4096
+	inmemorySnapshots = 496 // Number of recent vote snapshots to keep in memory
+	inmemoryPeers     = 200
+	inmemoryMessages  = 4096
 
 	allowedFutureBlockTime = 1 * time.Second // Max time from current time allowed for blocks, before they're considered future blocks
 )
@@ -521,6 +522,13 @@ func (sb *backend) Finalize(chain consensus.ChainReader, header *types.Header, s
 			logger.Info("successfully executed treasury rebalancing (KIP-103)", "memo", string(memo))
 		}
 	}
+
+	// The Registry contract must be immediately available from the fork block.
+	// So it is installed at block (RandaoCompatibleBlock - 1) which is before the fork block.
+	if chain.Config().IsRandaoForkBlockParent(header.Number) {
+		system.InstallRegistry(state, chain.Config().RandaoRegistry)
+	}
+
 	header.Root = state.IntermediateRoot(true)
 
 	// Assemble and return the final block for sealing
@@ -819,6 +827,10 @@ func (sb *backend) GetConsensusInfo(block *types.Block) (consensus.ConsensusInfo
 	return cInfo, nil
 }
 
+func (sb *backend) InitSnapshot() {
+	sb.recents.Purge()
+}
+
 // snapshot retrieves the state of the authorization voting at a given point in time.
 // There's in-memory snapshot and on-disk snapshot. On-disk snapshot is stored every checkpointInterval blocks.
 // Moreover, if the block has no in-memory or on-disk snapshot, before generating snapshot, it gathers the header and apply the vote in it.
@@ -836,7 +848,7 @@ func (sb *backend) snapshot(chain consensus.ChainReader, number uint64, hash com
 			break
 		}
 		// If an on-disk checkpoint snapshot can be found, use that
-		if number%checkpointInterval == 0 {
+		if params.IsCheckpointInterval(number) {
 			if s, err := loadSnapshot(sb.db, hash); err == nil {
 				logger.Trace("Loaded voting snapshot form disk", "number", number, "hash", hash)
 				snap = s
@@ -873,7 +885,7 @@ func (sb *backend) snapshot(chain consensus.ChainReader, number uint64, hash com
 	}
 
 	// If we've generated a new checkpoint snapshot, save to disk
-	if writable && snap.Number%checkpointInterval == 0 && len(headers) > 0 {
+	if writable && params.IsCheckpointInterval(snap.Number) && len(headers) > 0 {
 		if sb.governance.CanWriteGovernanceState(snap.Number) {
 			sb.governance.WriteGovernanceState(snap.Number, true)
 		}

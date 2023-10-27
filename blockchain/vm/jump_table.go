@@ -27,7 +27,7 @@ import (
 )
 
 type (
-	executionFunc func(pc *uint64, env *EVM, contract *Contract, memory *Memory, stack *Stack) ([]byte, error)
+	executionFunc func(pc *uint64, env *EVM, scope *ScopeContext) ([]byte, error)
 	gasFunc       func(*EVM, *Contract, *Stack, *Memory, uint64) (uint64, error) // last parameter is the requested memory size as a uint64
 	// memorySizeFunc returns the required size, and whether the operation overflowed a uint64
 	memorySizeFunc func(*Stack) (size uint64, overflow bool)
@@ -53,11 +53,7 @@ type operation struct {
 	// This value will be used to limit the execution time of a transaction on EVM.
 	computationCost uint64
 
-	halts   bool // indicates whether the operation should halt further execution
-	jumps   bool // indicates whether the program counter should not increment
 	writes  bool // determines whether this a state modifying operation
-	reverts bool // determines whether the operation reverts state (implicitly halts)
-	returns bool // determines whether the operations sets the return data content
 }
 
 var (
@@ -66,14 +62,22 @@ var (
 	LondonInstructionSet         = newLondonInstructionSet()
 	KoreInstructionSet           = newKoreInstructionSet()
 	ShanghaiInstructionSet       = newShanghaiInstructionSet()
+	CancunInstructionSet         = newCancunInstructionSet()
 )
 
 // JumpTable contains the EVM opcodes supported at a given fork.
 type JumpTable [256]*operation
 
+func newCancunInstructionSet() JumpTable {
+	instructionSet := newShanghaiInstructionSet()
+	enable5656(&instructionSet) // EIP-5656 (MCOPY opcode)
+	enable6780(&instructionSet) // EIP-6780 SELFDESTRUCT only in same transaction
+	enable1153(&instructionSet) // EIP-1153 (Tload, Tstore opcode)
+	return instructionSet
+}
+
 func newShanghaiInstructionSet() JumpTable {
 	instructionSet := newKoreInstructionSet()
-
 	enable3855(&instructionSet) // PUSH0 opcode
 	enable3860(&instructionSet) // EIP-3860: limit and meter initcode
 	return instructionSet
@@ -81,7 +85,6 @@ func newShanghaiInstructionSet() JumpTable {
 
 func newKoreInstructionSet() JumpTable {
 	instructionSet := newLondonInstructionSet()
-
 	enable2929(&instructionSet) // Access lists for trie accesses https://eips.ethereum.org/EIPS/eip-2929
 	enable3529(&instructionSet) // EIP-3529: Reduction in refunds https://eips.ethereum.org/EIPS/eip-3529
 	enable4399(&instructionSet) // Change 0x44 opcode return value (from difficulty value to prev blockhash value)
@@ -147,7 +150,6 @@ func newConstantinopleInstructionSet() JumpTable {
 		maxStack:        maxStack(4, 1),
 		memorySize:      memoryCreate2,
 		writes:          true,
-		returns:         true,
 		computationCost: params.Create2ComputationCost,
 	}
 	return instructionSet
@@ -165,7 +167,6 @@ func newByzantiumInstructionSet() JumpTable {
 		minStack:        minStack(6, 1),
 		maxStack:        maxStack(6, 1),
 		memorySize:      memoryStaticCall,
-		returns:         true,
 		computationCost: params.StaticCallComputationCost,
 	}
 	instructionSet[RETURNDATASIZE] = &operation{
@@ -190,8 +191,6 @@ func newByzantiumInstructionSet() JumpTable {
 		minStack:        minStack(2, 0),
 		maxStack:        maxStack(2, 0),
 		memorySize:      memoryRevert,
-		reverts:         true,
-		returns:         true,
 		computationCost: params.RevertComputationCost,
 	}
 	return instructionSet
@@ -208,7 +207,6 @@ func newHomesteadInstructionSet() JumpTable {
 		minStack:        minStack(6, 1),
 		maxStack:        maxStack(6, 1),
 		memorySize:      memoryDelegateCall,
-		returns:         true,
 		computationCost: params.DelegateCallComputationCost,
 	}
 	return instructionSet
@@ -223,7 +221,6 @@ func newFrontierInstructionSet() JumpTable {
 			constantGas:     0,
 			minStack:        minStack(0, 0),
 			maxStack:        maxStack(0, 0),
-			halts:           true,
 			computationCost: params.StopComputationCost,
 		},
 		ADD: {
@@ -582,7 +579,6 @@ func newFrontierInstructionSet() JumpTable {
 			constantGas:     GasMidStep,
 			minStack:        minStack(1, 0),
 			maxStack:        maxStack(1, 0),
-			jumps:           true,
 			computationCost: params.JumpComputationCost,
 		},
 		JUMPI: {
@@ -590,7 +586,6 @@ func newFrontierInstructionSet() JumpTable {
 			constantGas:     GasSlowStep,
 			minStack:        minStack(2, 0),
 			maxStack:        maxStack(2, 0),
-			jumps:           true,
 			computationCost: params.JumpiComputationCost,
 		},
 		PC: {
@@ -1122,7 +1117,6 @@ func newFrontierInstructionSet() JumpTable {
 			maxStack:        maxStack(3, 1),
 			memorySize:      memoryCreate,
 			writes:          true,
-			returns:         true,
 			computationCost: params.CreateComputationCost,
 		},
 		CALL: {
@@ -1132,7 +1126,6 @@ func newFrontierInstructionSet() JumpTable {
 			minStack:        minStack(7, 1),
 			maxStack:        maxStack(7, 1),
 			memorySize:      memoryCall,
-			returns:         true,
 			computationCost: params.CallComputationCost,
 		},
 		CALLCODE: {
@@ -1142,7 +1135,6 @@ func newFrontierInstructionSet() JumpTable {
 			minStack:        minStack(7, 1),
 			maxStack:        maxStack(7, 1),
 			memorySize:      memoryCall,
-			returns:         true,
 			computationCost: params.CallCodeComputationCost,
 		},
 		RETURN: {
@@ -1151,15 +1143,13 @@ func newFrontierInstructionSet() JumpTable {
 			minStack:        minStack(2, 0),
 			maxStack:        maxStack(2, 0),
 			memorySize:      memoryReturn,
-			halts:           true,
 			computationCost: params.ReturnComputationCost,
 		},
 		SELFDESTRUCT: {
-			execute:         opSuicide,
+			execute:         opSelfdestruct,
 			dynamicGas:      gasSelfdestruct,
 			minStack:        minStack(1, 0),
 			maxStack:        maxStack(1, 0),
-			halts:           true,
 			writes:          true,
 			computationCost: params.SelfDestructComputationCost,
 		},

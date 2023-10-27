@@ -123,7 +123,10 @@ const (
 	MSIZE
 	GAS
 	JUMPDEST
-	PUSH0 OpCode = 0x5f
+	TLOAD  OpCode = 0x5c
+	TSTORE OpCode = 0x5d
+	MCOPY  OpCode = 0x5e
+	PUSH0  OpCode = 0x5f
 )
 
 // 0x60 range.
@@ -303,6 +306,7 @@ var opCodeToString = map[OpCode]string{
 	MSIZE:    "MSIZE",
 	GAS:      "GAS",
 	JUMPDEST: "JUMPDEST",
+	MCOPY:    "MCOPY",
 	PUSH0:    "PUSH0",
 
 	// 0x60 range - push.
@@ -470,6 +474,7 @@ var stringToOp = map[string]OpCode{
 	"MSIZE":          MSIZE,
 	"GAS":            GAS,
 	"JUMPDEST":       JUMPDEST,
+	"MCOPY":          MCOPY,
 	"PUSH0":          PUSH0,
 	"PUSH1":          PUSH1,
 	"PUSH2":          PUSH2,
@@ -547,6 +552,8 @@ var stringToOp = map[string]OpCode{
 	"CALLCODE":       CALLCODE,
 	"REVERT":         REVERT,
 	"SELFDESTRUCT":   SELFDESTRUCT,
+	"TLOAD":          TLOAD,
+	"TSTORE":         TSTORE,
 }
 
 // StringToOp finds the opcode whose name is stored in `str`.
